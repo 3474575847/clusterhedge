@@ -13,6 +13,7 @@ from engine.chokepoint_engine import (
 )
 from engine.commodity_shock_engine import calculate_commodity_shocks
 from engine.graph_renderer import build_graph_data
+from engine.source_data import load_export_record, load_export_snapshot_metadata
 
 
 KNOWLEDGE_BASE_PATH = Path(__file__).with_name("knowledge_base.json")
@@ -67,6 +68,7 @@ class GeopoliticalEngine:
         price_shocks = calculate_commodity_shocks(
             a, b, severity, duration_days, self.knowledge_base
         )
+        import_cost_exposures = self._get_import_cost_exposures([a, b])
         result = {
             "country_a": self.knowledge_base["countries"].get(a, {}).get("name", country_a.strip()),
             "country_b": self.knowledge_base["countries"].get(b, {}).get("name", country_b.strip()),
@@ -75,15 +77,52 @@ class GeopoliticalEngine:
             "severity_multiplier": self.knowledge_base["severity_multipliers"][severity],
             "duration_days": duration_days,
             "affected_routes": routes,
+            "chokepoints": [route["chokepoint"] for route in routes],
             "escalation_chain": escalation_chain,
             "price_shocks": price_shocks,
+            "import_cost_exposures": import_cost_exposures,
+            "commodities": {
+                shock["name"]: shock for shock in price_shocks.values()
+            },
         }
         result["graph_data"] = build_graph_data(result, self.knowledge_base)
         if event_id:
             result["backtest"] = self._compare_historical_event(event_id, price_shocks)
         return result
 
+    def _get_import_cost_exposures(self, country_ids):
+        """Report importer-side gaps without inventing an unverified price shock."""
+        exposures = []
+        metadata = load_export_snapshot_metadata() or {}
+        for country_id in country_ids:
+            country = self.knowledge_base["countries"].get(country_id, {})
+            importer_ids = set(country.get("net_importers", []))
+            for commodity_id in self.knowledge_base["commodities"]:
+                record = load_export_record(country_id, commodity_id)
+                if record is not None and record.get("net_importer") is True:
+                    importer_ids.add(commodity_id)
+                if commodity_id not in importer_ids:
+                    continue
+                source = (
+                    f"FAOSTAT ({metadata['reference_year']})"
+                    if record is not None and record.get("net_importer") is True
+                    else "Illustrative knowledge-base classification"
+                )
+                exposures.append({
+                    "country": country.get("name", country_id),
+                    "commodity": commodity_id,
+                    "commodity_name": self.knowledge_base["commodities"][commodity_id]["name"],
+                    "source": source,
+                    "status": "unavailable",
+                    "reason": (
+                        "Importer status is known, but no verified supplier-share "
+                        "or import-price exposure data is available to quantify a shock."
+                    ),
+                })
+        return exposures
+
     def _compare_historical_event(self, event_id, price_shocks):
+        # TODO: replace illustrative actuals with FRED / World Bank Pink Sheet data before re-enabling display.
         event = self.knowledge_base["historical_events"].get(event_id)
         if not event:
             raise ValueError("Unknown historical event.")
@@ -120,3 +159,13 @@ class GeopoliticalEngine:
         if country_b is not None:
             results = self.simulate_conflict(results, country_b)
         return results["graph_data"]
+
+
+def run_simulation(country_a, country_b, severity="high", duration_days=30):
+    """Convenience entry point for scripts and callers without an engine instance."""
+    return GeopoliticalEngine().simulate_conflict(
+        country_a,
+        country_b,
+        severity=severity,
+        duration_days=duration_days,
+    )

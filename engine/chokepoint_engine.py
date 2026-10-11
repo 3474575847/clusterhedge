@@ -2,6 +2,8 @@
 
 import math
 
+from engine.source_data import get_export_share_pct
+
 
 ALLIANCE_RELATIONS = {"ally", "partner"}
 SPILLOVER_THRESHOLD = 5.0
@@ -49,21 +51,56 @@ def get_affected_chokepoints(country_a, country_b, severity, duration_days, know
     participants = conflict_countries | escalated_countries
     severity_multiplier = knowledge_base["severity_multipliers"][severity]
     duration_multiplier = min(1.0, math.sqrt(duration_days / 90.0))
+    origin_basins = {
+        basin
+        for country in conflict_countries
+        for basin in knowledge_base["countries"].get(country, {}).get("primary_export_basins", [])
+    }
     affected = []
 
     for route_id, route in knowledge_base["chokepoints"].items():
         bordering = set(route["bordering_countries"])
         route_commodities = set(route["commodities"])
         direct_links = sorted(conflict_countries & bordering)
-        alliance_links = [
+        commodity_flows = []
+        for country in conflict_countries:
+            for commodity in route_commodities:
+                commodity_data = knowledge_base["commodities"].get(commodity, {})
+                export_key = commodity_data.get("export_share_proxy", commodity)
+                country_routes = (
+                    knowledge_base.get("country_commodity_routes", {})
+                    .get(country, {})
+                    .get(export_key, commodity_data.get("chokepoints", []))
+                )
+                if route_id not in country_routes:
+                    continue
+                share = get_export_share_pct(country, export_key, knowledge_base)
+                if share >= 2.0:
+                    commodity_flows.append((country, commodity, share))
+        has_country_route_profile = any(
+            country in knowledge_base.get("country_commodity_routes", {})
+            for country in conflict_countries
+        )
+        if has_country_route_profile:
+            if not direct_links and not commodity_flows:
+                continue
+        elif (
+            not origin_basins.intersection(route["origin_basins"])
+            and not commodity_flows
+        ):
+            continue
+        bordering_links = [
             item for item in chain
             if item["to"] in bordering
         ]
+        ally_links = [item for item in bordering_links if item["relation"] == "ally"]
+        partner_links = [item for item in bordering_links if item["relation"] == "partner"]
         high_export_links = []
         for country in sorted(conflict_countries):
-            country_data = knowledge_base["countries"].get(country, {})
             for commodity in sorted(route_commodities):
-                share = country_data.get("exports", {}).get(commodity, 0)
+                commodity_data = knowledge_base["commodities"].get(commodity, {})
+                export_key = commodity_data.get("export_share_proxy", commodity)
+                share = get_export_share_pct(country, export_key, knowledge_base)
                 if share > DIRECT_EXPORT_THRESHOLD:
                     high_export_links.append((country, commodity, share))
 
@@ -77,13 +114,21 @@ def get_affected_chokepoints(country_a, country_b, severity, duration_days, know
                 f"{knowledge_base['countries'].get(country, {}).get('name', country)} borders the {route['name']}."
                 for country in direct_links
             )
-        elif alliance_links or high_export_links:
+        elif ally_links or (high_export_links and not partner_links):
             impact_type = "Alliance"
-            for link in alliance_links:
+            for link in ally_links:
                 linked_countries.update((link["from"], link["to"]))
                 reasons.append(
                     f"{knowledge_base['countries'].get(link['from'], {}).get('name', link['from'])} "
                     f"has a {link['relation']} link to "
+                    f"{knowledge_base['countries'].get(link['to'], {}).get('name', link['to'])}, "
+                    f"which borders the {route['name']}: {link['reason']}"
+                )
+            for link in partner_links:
+                linked_countries.update((link["from"], link["to"]))
+                reasons.append(
+                    f"{knowledge_base['countries'].get(link['from'], {}).get('name', link['from'])} "
+                    f"has a partner link to "
                     f"{knowledge_base['countries'].get(link['to'], {}).get('name', link['to'])}, "
                     f"which borders the {route['name']}: {link['reason']}"
                 )
@@ -95,10 +140,22 @@ def get_affected_chokepoints(country_a, country_b, severity, duration_days, know
                     f"{country_name} supplies {share:.1f}% of global {commodity_name} exports, "
                     f"and {commodity_name} flows through the {route['name']}."
                 )
+        elif partner_links and not ally_links:
+            impact_type = "Spillover"
+            for link in partner_links:
+                linked_countries.update((link["from"], link["to"]))
+                reasons.append(
+                    f"{knowledge_base['countries'].get(link['from'], {}).get('name', link['from'])} "
+                    f"has a partner link to "
+                    f"{knowledge_base['countries'].get(link['to'], {}).get('name', link['to'])}, "
+                    f"which borders the {route['name']}: {link['reason']}"
+                )
         else:
             for commodity in sorted(route_commodities):
+                commodity_data = knowledge_base["commodities"].get(commodity, {})
+                export_key = commodity_data.get("export_share_proxy", commodity)
                 share = sum(
-                    knowledge_base["countries"].get(country, {}).get("exports", {}).get(commodity, 0)
+                    get_export_share_pct(country, export_key, knowledge_base)
                     for country in conflict_countries
                 )
                 if share > SPILLOVER_THRESHOLD:
@@ -113,7 +170,7 @@ def get_affected_chokepoints(country_a, country_b, severity, duration_days, know
                     )
                     linked_countries.update(
                         country for country in conflict_countries
-                        if knowledge_base["countries"].get(country, {}).get("exports", {}).get(commodity, 0) >= 2.0
+                        if get_export_share_pct(country, export_key, knowledge_base) >= 2.0
                     )
             if reasons:
                 impact_type = "Spillover"
@@ -121,12 +178,51 @@ def get_affected_chokepoints(country_a, country_b, severity, duration_days, know
         if not impact_type or not reasons:
             continue
 
-        category_factor = {"Direct": 1.0, "Alliance": 0.75, "Spillover": 0.5}[impact_type]
-        magnitude = min(
-            1.0,
-            severity_multiplier * duration_multiplier
-            * (1.0 - route["alternative_route_capacity"]) * category_factor,
+        displayed_commodities = route_commodities
+        if has_country_route_profile:
+            displayed_commodities = set()
+            for country in conflict_countries:
+                for commodity in route_commodities:
+                    commodity_data = knowledge_base["commodities"].get(commodity, {})
+                    export_key = commodity_data.get("export_share_proxy", commodity)
+                    country_routes = (
+                        knowledge_base.get("country_commodity_routes", {})
+                        .get(country, {})
+                        .get(export_key, commodity_data.get("chokepoints", []))
+                    )
+                    if (
+                        route_id in country_routes
+                        and get_export_share_pct(country, export_key, knowledge_base) >= 2.0
+                    ):
+                        displayed_commodities.add(commodity)
+        elif partner_links and not direct_links and not ally_links:
+            partner_countries = {link["to"] for link in partner_links}
+            displayed_commodities = {
+                commodity
+                for commodity in route_commodities
+                if any(
+                    get_export_share_pct(
+                        country,
+                        knowledge_base["commodities"].get(commodity, {}).get(
+                            "export_share_proxy", commodity
+                        ),
+                        knowledge_base,
+                    ) >= 2.0
+                    for country in partner_countries
+                )
+            }
+
+        base_magnitude = (
+            severity_multiplier
+            * duration_multiplier
+            * (1.0 - route["alternative_route_capacity"])
         )
+        if impact_type == "Alliance":
+            magnitude = min(0.5, max(0.25, base_magnitude * 0.75))
+        elif partner_links and not direct_links and not ally_links:
+            magnitude = min(0.15, base_magnitude * 0.5)
+        else:
+            magnitude = min(1.0, base_magnitude * 0.5)
         affected.append({
             "id": route_id,
             "chokepoint": route["name"],
@@ -134,7 +230,7 @@ def get_affected_chokepoints(country_a, country_b, severity, duration_days, know
             "latitude": route["latitude"],
             "longitude": route["longitude"],
             "bordering_countries": route["bordering_countries"],
-            "commodities": sorted(route_commodities),
+            "commodities": sorted(displayed_commodities),
             "annual_trade_value_usd": route["annual_trade_value_usd"],
             "alternative_route_capacity": route["alternative_route_capacity"],
             "impact_type": impact_type,

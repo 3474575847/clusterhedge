@@ -1,0 +1,39 @@
+{
+  "source": "Federal Reserve Bank of St. Louis FRED graph CSV endpoint",
+  "source_url": "https://fred.stlouisfed.org/graph/fredgraph.csv",
+  "accessed_on": "2026-10-11",
+  "snapshot": "fred_prices.csv",
+  "series": {
+    "wheat": {
+      "series_id": "PWHEAMTUSDM",
+      "frequency": "monthly",
+      "series_url": "https://fred.stlouisfed.org/series/PWHEAMTUSDM"
+    },
+    "corn": {
+      "series_id": "PMAIZMTUSDM",
+      "frequency": "monthly",
+      "series_url": "https://fred.stlouisfed.org/series/PMAIZMTUSDM"
+    },
+    "rice": {
+      "series_id": "PRICENPQUSDM",
+      "frequency": "monthly",
+      "series_url": "https://fred.stlouisfed.org/series/PRICENPQUSDM"
+    },
+    "crude_oil": {
+      "series_id": "DCOILBRENTEU",
+      "frequency": "daily",
+      "series_url": "https://fred.stlouisfed.org/series/DCOILBRENTEU"
+    },
+    "copper": {
+      "series_id": "PCOPPUSDM",
+      "frequency": "monthly",
+      "series_url": "https://fred.stlouisfed.org/series/PCOPPUSDM"
+    }
+  },
+  "coverage_start": "2015-01-01",
+  "coverage_end": "2026-10-06",
+  "limitations": [
+    "Series are benchmark proxies, not local transaction prices.",
+    "FRED series coverage and units differ by commodity; validate before operational use."
+  ]
+}

@@ -61,6 +61,33 @@ files, or credentials.
 python -m unittest discover -s tests
 ```
 
+## Geopolitical source snapshots
+
+The geopolitical model loads dated snapshots offline at runtime:
+
+- `engine/data_snapshots/faostat_exports.json` contains 2024 FAOSTAT export
+  values and shares for wheat, corn, and rice, including FAOSTAT flags and
+  net-importer comparisons.
+- `engine/data_snapshots/fred_prices.csv` contains FRED benchmark price history
+  for wheat, corn, rice, Brent crude, and copper. The model estimates realized
+  volatility from the latest 30 available returns for each series.
+
+Refresh snapshots with the system `curl` utility and Python:
+
+```bash
+python scripts/refresh_geopolitical_sources.py --year 2024
+```
+
+The FAOSTAT bulk archive is large; an already-downloaded archive can be reused
+with `--faostat-archive PATH`. Use `--prices-only` or `--exports-only` to refresh
+one source. Snapshots are source-limited: uncovered commodity-country pairs
+continue to use explicitly labeled illustrative knowledge-base assumptions.
+Route capacities, route trade values, elasticities, current relationship
+classifications, and historical event comparisons are not verified by these
+snapshots. UN Comtrade, USGS, UNCTAD, licensed Drewry/Lloyd's List datasets, and
+historical COW/ATOP alliance datasets are not silently represented as current
+verified data.
+
 ## Deployment
 
 Vercel currently documents support for Flask, but this app is not ready to be

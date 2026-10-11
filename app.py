@@ -391,18 +391,39 @@ def geopolitical_radar():
                 graph_data = results['graph_data']
                 total_base_cost = 0.0
                 total_delta_cost = 0.0
+                commodity_delta_costs = {}
                 for project in Project.query.all():
                     impact = geo_engine.calculate_bom_impact(project, results['price_shocks'])
                     if impact['items']:
-                        impacted_projects.append({'project': project, **impact})
+                        impacted_projects.append({
+                            'project': project,
+                            'rows': impact['items'],
+                            'total_base_cost': impact['total_base_cost'],
+                            'total_delta_cost': impact['total_delta_cost'],
+                        })
                         total_base_cost += impact['total_base_cost']
                         total_delta_cost += impact['total_delta_cost']
+                        for item in impact['items']:
+                            commodity_delta_costs[item['commodity']] = (
+                                commodity_delta_costs.get(item['commodity'], 0.0)
+                                + item['delta_cost']
+                            )
                 results['bom_exposure_pct'] = (
                     total_delta_cost / total_base_cost * 100.0 if total_base_cost else 0.0
                 )
-                results['flash_commodity'] = next(iter(results['price_shocks'].values()), None)
-                if results['flash_commodity']:
-                    results['flash_commodity_id'] = next(iter(results['price_shocks']))
+                largest_commodity = max(
+                    commodity_delta_costs.items(),
+                    key=lambda item: item[1],
+                    default=None,
+                )
+                results['largest_bom_exposure'] = (
+                    {
+                        'name': largest_commodity[0],
+                        'pct': largest_commodity[1] / total_base_cost * 100.0,
+                    }
+                    if largest_commodity and total_base_cost
+                    else None
+                )
 
     return render_template(
         'geopolitics.html',

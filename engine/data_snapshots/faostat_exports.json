@@ -1,0 +1,833 @@
+{
+  "metadata": {
+    "source": "FAOSTAT Trade: Crops and livestock products (normalized)",
+    "dataset_url": "https://www.fao.org/faostat/en/#data/TCL",
+    "bulk_url": "https://bulks-faostat.fao.org/production/Trade_CropsLivestock_E_All_Data_(Normalized).zip",
+    "reference_year": 2024,
+    "accessed_on": "2026-10-11",
+    "measure": "Export value in thousands of current US dollars; share is country export value divided by FAOSTAT World export value.",
+    "net_importer_rule": "True when reported import value exceeds reported export value for the same FAOSTAT item and reference year.",
+    "flags_note": "FAOSTAT country flags are preserved; X/E indicate estimates and are not equivalent to unflagged reported observations."
+  },
+  "commodities": {
+    "wheat": {
+      "source_item": "Wheat",
+      "world_export_value_1000_usd": 52292764.0,
+      "countries": {
+        "belarus": {
+          "export_value_1000_usd": 36.0,
+          "import_value_1000_usd": 39000.0,
+          "export_flag": "X",
+          "import_flag": "E",
+          "export_share_pct": 6.884317684947768e-05,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "ukraine": {
+          "export_value_1000_usd": 3736274.0,
+          "import_value_1000_usd": 1153.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 7.144915881669594,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "iraq": {
+          "export_value_1000_usd": 7021.0,
+          "import_value_1000_usd": 296761.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 0.01342633179611619,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "vietnam": {
+          "export_value_1000_usd": 975.0,
+          "import_value_1000_usd": 1569224.0,
+          "export_flag": "X",
+          "import_flag": "A",
+          "export_share_pct": 0.0018645027063400204,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "kazakhstan": {
+          "export_value_1000_usd": 1121911.0,
+          "import_value_1000_usd": 381445.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 2.145442149510399,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "russia": {
+          "export_value_1000_usd": 9548964.0,
+          "import_value_1000_usd": 4445.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 18.260583816147104,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "united_arab_emirates": {
+          "export_value_1000_usd": 147867.0,
+          "import_value_1000_usd": 480000.0,
+          "export_flag": "X",
+          "import_flag": "E",
+          "export_share_pct": 0.28276761197782546,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "iran": {
+          "export_value_1000_usd": 6.0,
+          "import_value_1000_usd": 16680.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 1.147386280824628e-05,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "peru": {
+          "export_value_1000_usd": 278.0,
+          "import_value_1000_usd": 668419.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.000531622310115411,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "egypt": {
+          "export_value_1000_usd": 2294.0,
+          "import_value_1000_usd": 4442761.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.004386840213686161,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "chile": {
+          "export_value_1000_usd": 26.0,
+          "import_value_1000_usd": 289632.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 4.972007216906722e-05,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "morocco": {
+          "export_value_1000_usd": 109.0,
+          "import_value_1000_usd": 1447902.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 0.00020844184101647412,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "argentina": {
+          "export_value_1000_usd": 1949262.0,
+          "import_value_1000_usd": 47.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 3.7275941275546267,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "india": {
+          "export_value_1000_usd": 22319.0,
+          "import_value_1000_usd": 39809.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.04268085733620812,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "saudi_arabia": {
+          "export_value_1000_usd": 276.0,
+          "import_value_1000_usd": 963978.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.0005277976891793289,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "finland": {
+          "export_value_1000_usd": 15783.0,
+          "import_value_1000_usd": 2669.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.03018199611709184,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "japan": {
+          "export_value_1000_usd": 3.0,
+          "import_value_1000_usd": 1695515.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 5.73693140412314e-06,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "brazil": {
+          "export_value_1000_usd": 608161.0,
+          "import_value_1000_usd": 1807657.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 1.162992646554311,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "australia": {
+          "export_value_1000_usd": 5566530.0,
+          "import_value_1000_usd": 60.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 10.644933589664527,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "thailand": {
+          "export_value_1000_usd": 38.0,
+          "import_value_1000_usd": 1157641.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 7.266779778555977e-05,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "turkey": {
+          "export_value_1000_usd": 563864.0,
+          "import_value_1000_usd": 1358160.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 1.0782830297514967,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "canada": {
+          "export_value_1000_usd": 7290484.0,
+          "import_value_1000_usd": 25479.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 13.941668870285762,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "sweden": {
+          "export_value_1000_usd": 79729.0,
+          "import_value_1000_usd": 41278.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.15246660130644463,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "united_states": {
+          "export_value_1000_usd": 5971386.0,
+          "import_value_1000_usd": 784096.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 11.419143956513754,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "france": {
+          "export_value_1000_usd": 3706430.0,
+          "import_value_1000_usd": 69570.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 7.087844888061377,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "china": {
+          "export_value_1000_usd": 1964.0,
+          "import_value_1000_usd": 3901491.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.003755777759232616,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        }
+      }
+    },
+    "corn": {
+      "source_item": "Maize (corn)",
+      "world_export_value_1000_usd": 45513935.0,
+      "countries": {
+        "democratic_republic_of_the_congo": {
+          "export_value_1000_usd": 12.0,
+          "import_value_1000_usd": 9446.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 2.6365551561296557e-05,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "vietnam": {
+          "export_value_1000_usd": 117179.0,
+          "import_value_1000_usd": 3039583.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.25745741386676413,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "iraq": {
+          "export_value_1000_usd": 21.0,
+          "import_value_1000_usd": 231033.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 4.613971523226897e-05,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "belarus": {
+          "export_value_1000_usd": 110.0,
+          "import_value_1000_usd": 69810.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 0.00024168422264521844,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "ukraine": {
+          "export_value_1000_usd": 5072452.0,
+          "import_value_1000_usd": 43209.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 11.144832895683487,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "kazakhstan": {
+          "export_value_1000_usd": 38605.0,
+          "import_value_1000_usd": 17678.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.0848201765019878,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "yemen": {
+          "export_value_1000_usd": 140.0,
+          "import_value_1000_usd": 125818.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 0.0003075981015484598,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "russia": {
+          "export_value_1000_usd": 457500.0,
+          "import_value_1000_usd": 38894.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 1.0051866532744311,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "bolivia": {
+          "export_value_1000_usd": 8199.0,
+          "import_value_1000_usd": 1297.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.018014263104255874,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "united_arab_emirates": {
+          "export_value_1000_usd": 33842.0,
+          "import_value_1000_usd": 164657.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 0.07435524966144984,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "iran": {
+          "export_value_1000_usd": 1723.0,
+          "import_value_1000_usd": 1203298.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 0.0037856537783428307,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "peru": {
+          "export_value_1000_usd": 37195.0,
+          "import_value_1000_usd": 1000681.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.08172222419353545,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "pakistan": {
+          "export_value_1000_usd": 289407.0,
+          "import_value_1000_usd": 68315.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.6358645983916794,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "venezuela": {
+          "export_value_1000_usd": 5.0,
+          "import_value_1000_usd": 355871.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 1.0985646483873566e-05,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "chile": {
+          "export_value_1000_usd": 72643.0,
+          "import_value_1000_usd": 626398.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.1596060635056055,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "egypt": {
+          "export_value_1000_usd": 3516.0,
+          "import_value_1000_usd": 2271954.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.007725106607459891,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "morocco": {
+          "export_value_1000_usd": 1.0,
+          "import_value_1000_usd": 665178.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 2.1971292967747133e-06,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "argentina": {
+          "export_value_1000_usd": 6550709.0,
+          "import_value_1000_usd": 41169.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 14.392754658545783,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "india": {
+          "export_value_1000_usd": 182977.0,
+          "import_value_1000_usd": 231197.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.40202412733594667,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "japan": {
+          "export_value_1000_usd": 37.0,
+          "import_value_1000_usd": 3938886.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 8.129378398066437e-05,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "finland": {
+          "export_value_1000_usd": 9.0,
+          "import_value_1000_usd": 9733.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 1.9774163670972416e-05,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "saudi_arabia": {
+          "export_value_1000_usd": 365.0,
+          "import_value_1000_usd": 1214142.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.0008019521933227703,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "brazil": {
+          "export_value_1000_usd": 8179619.0,
+          "import_value_1000_usd": 313942.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 17.97168054135508,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "australia": {
+          "export_value_1000_usd": 40794.0,
+          "import_value_1000_usd": 2874.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.08962969253262765,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "thailand": {
+          "export_value_1000_usd": 86500.0,
+          "import_value_1000_usd": 547009.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.19005168417101267,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "turkey": {
+          "export_value_1000_usd": 277426.0,
+          "import_value_1000_usd": 1031732.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.6095407922870216,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "canada": {
+          "export_value_1000_usd": 477509.0,
+          "import_value_1000_usd": 635965.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 1.0491490133735963,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "sweden": {
+          "export_value_1000_usd": 1235.0,
+          "import_value_1000_usd": 19462.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.0027134546815167707,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "france": {
+          "export_value_1000_usd": 1855459.0,
+          "import_value_1000_usd": 336730.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 4.076683327864313,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "united_states": {
+          "export_value_1000_usd": 14341944.0,
+          "import_value_1000_usd": 281699.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 31.511105335102314,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "china": {
+          "export_value_1000_usd": 7229.0,
+          "import_value_1000_usd": 4856965.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.0158830476863844,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        }
+      }
+    },
+    "rice": {
+      "source_item": "Rice, paddy (rice milled equivalent)",
+      "world_export_value_1000_usd": 38811057.0,
+      "countries": {
+        "democratic_republic_of_the_congo": {
+          "export_value_1000_usd": 0.0,
+          "import_value_1000_usd": 50517.0,
+          "export_flag": "X",
+          "import_flag": "E",
+          "export_share_pct": 0.0,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "ukraine": {
+          "export_value_1000_usd": 4644.0,
+          "import_value_1000_usd": 65551.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.011965662259597826,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "belarus": {
+          "export_value_1000_usd": 0.0,
+          "import_value_1000_usd": 2536.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 0.0,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "iraq": {
+          "export_value_1000_usd": 422.0,
+          "import_value_1000_usd": 1840434.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 0.0010873190080857627,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "vietnam": {
+          "export_value_1000_usd": 3625600.0,
+          "import_value_1000_usd": 1517221.0,
+          "export_flag": "E",
+          "import_flag": "A",
+          "export_share_pct": 9.341667762359577,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "kazakhstan": {
+          "export_value_1000_usd": 40554.0,
+          "import_value_1000_usd": 13785.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.10449084135997636,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "qatar": {
+          "export_value_1000_usd": 303.0,
+          "import_value_1000_usd": 199481.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 0.0007807053541468865,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "yemen": {
+          "export_value_1000_usd": 0.0,
+          "import_value_1000_usd": 658704.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 0.0,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "russia": {
+          "export_value_1000_usd": 26783.0,
+          "import_value_1000_usd": 136564.0,
+          "export_flag": "E",
+          "import_flag": "X",
+          "export_share_pct": 0.0690086848188649,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "bolivia": {
+          "export_value_1000_usd": 2347.0,
+          "import_value_1000_usd": 1470.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.006047245762979349,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "iran": {
+          "export_value_1000_usd": 3900.0,
+          "import_value_1000_usd": 785048.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 0.010048682776148043,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "united_arab_emirates": {
+          "export_value_1000_usd": 42980.0,
+          "import_value_1000_usd": 759626.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 0.11074163736380588,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "peru": {
+          "export_value_1000_usd": 11234.0,
+          "import_value_1000_usd": 124072.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.028945359565960803,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "pakistan": {
+          "export_value_1000_usd": 4193488.0,
+          "import_value_1000_usd": 57283.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 10.80487965066244,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "chile": {
+          "export_value_1000_usd": 2081.0,
+          "import_value_1000_usd": 152265.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.005361874065939507,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "venezuela": {
+          "export_value_1000_usd": 55.0,
+          "import_value_1000_usd": 152012.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 0.00014171219299695961,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "egypt": {
+          "export_value_1000_usd": 88079.0,
+          "import_value_1000_usd": 101639.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.22694305903598555,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "morocco": {
+          "export_value_1000_usd": 1355.0,
+          "import_value_1000_usd": 67697.0,
+          "export_flag": "X",
+          "import_flag": "X",
+          "export_share_pct": 0.003491273118379641,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "argentina": {
+          "export_value_1000_usd": 138402.0,
+          "import_value_1000_usd": 4837.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.3566045624575491,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "india": {
+          "export_value_1000_usd": 11647536.0,
+          "import_value_1000_usd": 5621.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 30.010870355837,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "japan": {
+          "export_value_1000_usd": 79468.0,
+          "import_value_1000_usd": 626735.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.20475608278331608,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "saudi_arabia": {
+          "export_value_1000_usd": 6730.0,
+          "import_value_1000_usd": 2012584.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.01734041925217342,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "finland": {
+          "export_value_1000_usd": 186.0,
+          "import_value_1000_usd": 49827.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.00047924487086244523,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "brazil": {
+          "export_value_1000_usd": 564338.0,
+          "import_value_1000_usd": 710304.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 1.4540650103912398,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "thailand": {
+          "export_value_1000_usd": 6403312.0,
+          "import_value_1000_usd": 12874.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 16.498679744795407,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "australia": {
+          "export_value_1000_usd": 234347.0,
+          "import_value_1000_usd": 289810.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.6038150416774272,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "turkey": {
+          "export_value_1000_usd": 209877.0,
+          "import_value_1000_usd": 280923.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.5407659987204162,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "canada": {
+          "export_value_1000_usd": 46272.0,
+          "import_value_1000_usd": 450623.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.11922375626100572,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "sweden": {
+          "export_value_1000_usd": 2777.0,
+          "import_value_1000_usd": 113178.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.00715517745368285,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "united_states": {
+          "export_value_1000_usd": 2437712.0,
+          "import_value_1000_usd": 1616348.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 6.280972971181898,
+          "net_importer": false,
+          "net_importer_status": "determined"
+        },
+        "france": {
+          "export_value_1000_usd": 58331.0,
+          "import_value_1000_usd": 685870.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 0.15029479872192092,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        },
+        "china": {
+          "export_value_1000_usd": 889874.0,
+          "import_value_1000_usd": 1298259.0,
+          "export_flag": "A",
+          "import_flag": "A",
+          "export_share_pct": 2.2928362914722986,
+          "net_importer": true,
+          "net_importer_status": "determined"
+        }
+      }
+    }
+  }
+}

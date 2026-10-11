@@ -1,5 +1,6 @@
 """Build vis-network data from the already-computed simulation result."""
 
+import hashlib
 import logging
 
 
@@ -37,6 +38,8 @@ def build_graph_data(results, knowledge_base):
         })
 
     def add_edge(source, target, label, weight=1.0):
+        if source == target:
+            return
         edges.append({
             "from": source,
             "to": target,
@@ -60,10 +63,22 @@ def build_graph_data(results, knowledge_base):
         country = knowledge_base["countries"].get(target, {"name": target.title()})
         source_name = knowledge_base["countries"].get(escalation["from"], {}).get("name", escalation["from"])
         relation_role = f"{escalation['relation']}_country"
-        score = max(
-            (route["magnitude"] * 100 for route in results["affected_routes"] if target in route["linked_countries"]),
-            default=results["severity_multiplier"] * 25,
+        outgoing_edge_magnitudes = [
+            route["magnitude"]
+            for route in results["affected_routes"]
+            if target in route["linked_countries"]
+        ]
+        # Third parties receive only 60% of their strongest outgoing route risk.
+        third_party_risk = max(outgoing_edge_magnitudes, default=0.0) * 0.6
+        primary_risk = min(
+            (
+                sum(shock["exporters"].get(primary, 0.0) for shock in shock_by_id.values())
+                * results["severity_multiplier"]
+                for primary in inputs
+            ),
+            default=0.0,
         )
+        score = min(third_party_risk * 100, max(primary_risk - 0.1, 0.0))
         tooltip = f"{escalation['relation'].title()} escalation from {source_name}: {escalation['reason']}"
         add_node(f"country:{target}", country["name"], relation_role, score, tooltip)
         add_edge(
@@ -102,7 +117,9 @@ def build_graph_data(results, knowledge_base):
         )
         tooltip = (
             f"Expected: +{risk:.1f}%. 95% CI: {ci}. "
-            f"Export shares: {exporters}. Source: {shock['volatility_source']}"
+            f"Export shares: {exporters}. "
+            f"Export data: {shock['export_data_source']}; "
+            f"volatility data: {shock['volatility_source']}"
         )
         commodity_node = f"commodity:{commodity_id}"
         add_node(commodity_node, name, "commodity", risk, tooltip)

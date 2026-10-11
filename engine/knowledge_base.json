@@ -1,137 +1,195 @@
 {
   "metadata": {
     "version": 1,
-    "data_note": "Static, approximate scenario inputs assembled for an educational prototype. Export shares, elasticities, annual trade values, route capacities, volatilities, and BOM costs are not live data and should be replaced with dated UN Comtrade, FAOSTAT, World Bank, UNCTAD, and market-price observations before operational use.",
+    "data_note": "Mixed-source educational prototype. Dated FAOSTAT crop-trade and FRED benchmark-price snapshots are used where available; remaining export shares, elasticities, route assignments, route trade values, route capacities, relations, and BOM costs are illustrative assumptions. Commodity-specific route assignments may span origin basins and do not quantify actual shipment shares. See each simulation result for applied data provenance.",
     "sources": [
-      "UN Comtrade (recommended source for merchandise export shares; values here are illustrative approximations)",
-      "FAOSTAT (recommended source for agricultural trade shares; values here are illustrative approximations)",
-      "World Bank Commodity Markets / Pink Sheet (recommended price-volatility source; values here are illustrative assumptions)",
-      "World Bank and UNCTAD maritime trade publications (recommended sources for route traffic; values here are illustrative estimates)"
+      "FAOSTAT Trade: Crops and livestock products normalized dataset (dated wheat, corn, and rice export-value shares in engine/data_snapshots/faostat_exports.json)",
+      "Federal Reserve Bank of St. Louis FRED graph CSV (dated wheat, corn, rice, Brent crude, and copper benchmark prices in engine/data_snapshots/fred_prices.csv)",
+      "UN Comtrade (recommended for broader merchandise exports; current snapshot not available)",
+      "COW Formal Alliances v4.1 and ATOP (historical treaty datasets; their end dates do not validate current strategic partnerships)",
+      "World Bank Commodity Markets / Pink Sheet (recommended additional price benchmarks; not used in the current snapshot)",
+      "World Bank and UNCTAD maritime trade publications (recommended sources for route traffic; values here are illustrative estimates)",
+      "Drewry and Lloyd's List (route and freight data are licensed and are not included)"
     ]
   },
   "countries": {
     "ukraine": {
       "name": "Ukraine",
+      "primary_export_basins": ["black_sea", "eastern_europe"],
       "exports": {"wheat": 8.0, "corn": 15.0, "fertilizer": 1.0, "steel": 2.5, "lumber": 2.1}
     },
     "russia": {
       "name": "Russia",
-      "exports": {"wheat": 20.0, "corn": 2.5, "fertilizer": 16.0, "crude_oil": 11.0, "lpg": 8.0, "steel": 4.0, "lumber": 2.4}
+      "primary_export_basins": ["black_sea", "eastern_europe"],
+      "exports": {"wheat": 20.0, "corn": 2.5, "fertilizer": 16.0, "crude_oil": 11.0, "lpg": 8.0, "steel": 7.0, "lumber": 2.4}
     },
     "pakistan": {
       "name": "Pakistan",
+      "primary_export_basins": ["south_asia", "arabian_sea"],
       "exports": {"wheat": 1.5, "rice": 8.0, "fertilizer": 1.8}
     },
     "iran": {
       "name": "Iran",
+      "primary_export_basins": ["middle_east", "arabian_sea"],
       "exports": {"crude_oil": 4.0, "lpg": 4.0, "steel": 2.0}
     },
     "china": {
       "name": "China",
+      "primary_export_basins": ["asia_pacific"],
       "exports": {"corn": 2.0, "fertilizer": 10.0, "steel": 55.0, "rice": 7.0, "copper": 8.0, "lumber": 2.0}
     },
     "belarus": {
       "name": "Belarus",
+      "primary_export_basins": ["eastern_europe", "baltic"],
       "exports": {"fertilizer": 7.0}
     },
     "india": {
       "name": "India",
-      "exports": {"wheat": 1.5, "fertilizer": 2.0, "steel": 6.0, "rice": 26.0}
+      "primary_export_basins": ["south_asia", "arabian_sea"],
+      "exports": {"wheat": 2.0, "fertilizer": 2.0, "steel": 9.0, "rice": 34.0},
+      "net_importers": ["fertilizer"]
     },
     "thailand": {
       "name": "Thailand",
+      "primary_export_basins": ["asia_pacific"],
       "exports": {"rice": 15.0}
     },
     "vietnam": {
       "name": "Vietnam",
+      "primary_export_basins": ["asia_pacific"],
       "exports": {"rice": 12.0}
     },
     "united_states": {
       "name": "United States",
+      "primary_export_basins": ["americas", "asia_pacific"],
       "exports": {"wheat": 10.0, "corn": 30.0, "crude_oil": 13.0, "lpg": 20.0, "lumber": 13.0}
     },
     "canada": {
       "name": "Canada",
+      "primary_export_basins": ["americas"],
       "exports": {"wheat": 13.0, "fertilizer": 12.0, "lumber": 18.0}
     },
     "australia": {
       "name": "Australia",
+      "primary_export_basins": ["asia_pacific"],
       "exports": {"wheat": 10.0}
     },
     "argentina": {
       "name": "Argentina",
+      "primary_export_basins": ["americas"],
       "exports": {"wheat": 6.0, "corn": 4.0}
     },
     "brazil": {
       "name": "Brazil",
+      "primary_export_basins": ["americas"],
       "exports": {"corn": 22.0}
     },
     "france": {
       "name": "France",
+      "primary_export_basins": ["europe", "mediterranean"],
       "exports": {"wheat": 7.0}
     },
     "kazakhstan": {
       "name": "Kazakhstan",
+      "primary_export_basins": ["eastern_europe", "central_asia"],
       "exports": {"wheat": 4.0}
     },
     "morocco": {
       "name": "Morocco",
+      "primary_export_basins": ["north_africa", "atlantic"],
       "exports": {"fertilizer": 8.0}
     },
     "saudi_arabia": {
       "name": "Saudi Arabia",
+      "primary_export_basins": ["middle_east", "arabian_sea"],
       "exports": {"crude_oil": 12.0, "lpg": 5.0}
     },
     "qatar": {
       "name": "Qatar",
+      "primary_export_basins": ["middle_east", "arabian_sea"],
       "exports": {"lpg": 10.0}
     },
     "iraq": {
       "name": "Iraq",
+      "primary_export_basins": ["middle_east", "arabian_sea"],
       "exports": {"crude_oil": 5.0}
     },
     "united_arab_emirates": {
       "name": "United Arab Emirates",
+      "primary_export_basins": ["middle_east", "arabian_sea"],
       "exports": {"crude_oil": 4.0}
     },
     "japan": {
       "name": "Japan",
+      "primary_export_basins": ["asia_pacific"],
       "exports": {"steel": 5.0}
     },
     "sweden": {
       "name": "Sweden",
+      "primary_export_basins": ["baltic", "europe"],
       "exports": {"lumber": 6.0}
     },
     "finland": {
       "name": "Finland",
+      "primary_export_basins": ["baltic", "europe"],
       "exports": {"lumber": 4.0}
     },
     "chile": {
       "name": "Chile",
+      "primary_export_basins": ["americas", "pacific"],
       "exports": {"copper": 27.0}
     },
     "peru": {
       "name": "Peru",
+      "primary_export_basins": ["americas", "pacific"],
       "exports": {"copper": 10.0}
     },
     "democratic_republic_of_the_congo": {
       "name": "Democratic Republic of the Congo",
+      "primary_export_basins": ["central_africa", "indian_ocean"],
       "exports": {"copper": 3.0}
     },
     "egypt": {
       "name": "Egypt",
+      "primary_export_basins": ["north_africa", "middle_east"],
       "exports": {"transport": 3.0}
     },
     "yemen": {
       "name": "Yemen",
+      "primary_export_basins": ["middle_east", "arabian_sea"],
       "exports": {"crude_oil": 2.2}
     }
   },
+  "country_commodity_routes": {
+    "india": {
+      "rice": ["bay_of_bengal", "indus_arabian_sea", "strait_of_malacca"],
+      "steel": ["bay_of_bengal", "indus_arabian_sea"]
+    },
+    "pakistan": {
+      "rice": ["indus_arabian_sea", "strait_of_malacca"]
+    },
+    "ukraine": {
+      "wheat": ["black_sea", "suez_canal", "strait_of_malacca"],
+      "corn": ["black_sea", "suez_canal", "strait_of_malacca"],
+      "fertilizer": ["black_sea", "baltic_sea", "suez_canal"],
+      "steel": ["black_sea", "baltic_sea"],
+      "lumber": ["baltic_sea", "suez_canal"]
+    },
+    "russia": {
+      "wheat": ["black_sea", "suez_canal", "strait_of_malacca"],
+      "corn": ["black_sea", "suez_canal", "strait_of_malacca"],
+      "fertilizer": ["black_sea", "baltic_sea", "suez_canal"],
+      "crude_oil": ["baltic_sea", "black_sea", "suez_canal"],
+      "lpg": ["baltic_sea", "black_sea", "suez_canal"],
+      "steel": ["black_sea", "baltic_sea"],
+      "lumber": ["baltic_sea", "suez_canal"]
+    }
+  },
   "commodities": {
-    "wheat": {"name": "Wheat", "elasticity": 0.8, "annual_volatility": 0.28, "pricing_horizon_hours": 48, "chokepoints": ["black_sea", "suez_canal", "indus_arabian_sea", "panama_canal"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; validate against FAOSTAT trade and World Bank commodity price series."},
-    "corn": {"name": "Corn", "elasticity": 0.7, "annual_volatility": 0.25, "pricing_horizon_hours": 48, "chokepoints": ["black_sea", "panama_canal"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; validate against FAOSTAT and World Bank series."},
+    "wheat": {"name": "Wheat", "elasticity": 0.8, "annual_volatility": 0.28, "pricing_horizon_hours": 48, "chokepoints": ["black_sea", "suez_canal", "strait_of_malacca", "indus_arabian_sea"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; validate against FAOSTAT trade and World Bank commodity price series."},
+    "corn": {"name": "Corn", "elasticity": 0.7, "annual_volatility": 0.25, "pricing_horizon_hours": 48, "chokepoints": ["black_sea", "strait_of_malacca"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; validate against FAOSTAT and World Bank series."},
     "fertilizer": {"name": "Fertilizer", "elasticity": 0.9, "annual_volatility": 0.35, "pricing_horizon_hours": 72, "chokepoints": ["black_sea", "baltic_sea", "suez_canal", "strait_of_hormuz", "indus_arabian_sea"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; fertilizer aggregates several products."},
-    "crude_oil": {"name": "Crude Oil", "elasticity": 1.0, "annual_volatility": 0.32, "pricing_horizon_hours": 24, "chokepoints": ["baltic_sea", "black_sea", "strait_of_hormuz", "suez_canal", "south_china_sea", "panama_canal", "strait_of_malacca"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; validate against World Bank Brent/Dubai price series."},
+    "crude_oil": {"name": "Crude Oil", "elasticity": 1.0, "annual_volatility": 0.32, "pricing_horizon_hours": 24, "chokepoints": ["baltic_sea", "black_sea", "strait_of_hormuz", "suez_canal", "south_china_sea", "strait_of_malacca"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; validate against World Bank Brent/Dubai price series."},
     "lpg": {"name": "LPG", "elasticity": 0.9, "annual_volatility": 0.30, "pricing_horizon_hours": 48, "chokepoints": ["baltic_sea", "black_sea", "strait_of_hormuz", "suez_canal", "strait_of_malacca", "taiwan_strait"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; LPG is a heterogeneous market."},
     "steel": {"name": "Steel", "elasticity": 0.5, "annual_volatility": 0.22, "pricing_horizon_hours": 72, "chokepoints": ["black_sea", "baltic_sea", "taiwan_strait", "south_china_sea", "indus_arabian_sea"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; steel products are aggregated."},
     "lumber": {"name": "Lumber", "elasticity": 0.4, "annual_volatility": 0.38, "pricing_horizon_hours": 72, "chokepoints": ["baltic_sea", "suez_canal", "south_china_sea"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; validate against lumber futures and World Bank timber series."},
@@ -140,15 +198,16 @@
     "transport": {"name": "Transport", "elasticity": 0.35, "annual_volatility": 0.18, "pricing_horizon_hours": 72, "export_share_proxy": "crude_oil", "chokepoints": ["baltic_sea", "black_sea", "suez_canal", "strait_of_hormuz", "strait_of_malacca", "panama_canal"], "source_note": "Transport is an oil-linked cost proxy using crude-oil exporting shares; pricing horizon, volatility, and elasticity are illustrative. It is not a separately measured global export market."}
   },
   "chokepoints": {
-    "black_sea": {"name": "Black Sea", "latitude": 43.5, "longitude": 34.0, "bordering_countries": ["ukraine", "russia", "turkey", "romania", "bulgaria", "georgia"], "commodities": ["wheat", "corn", "fertilizer", "crude_oil", "lpg", "steel"], "annual_trade_value_usd": 600000000000, "alternative_route_capacity": 0.35},
-    "baltic_sea": {"name": "Baltic Sea", "latitude": 57.0, "longitude": 20.0, "bordering_countries": ["russia", "finland", "sweden", "denmark", "germany", "poland", "lithuania", "latvia", "estonia"], "commodities": ["crude_oil", "lpg", "fertilizer", "steel", "lumber", "transport"], "annual_trade_value_usd": 1000000000000, "alternative_route_capacity": 0.55},
-    "suez_canal": {"name": "Suez Canal & Red Sea", "latitude": 30.0, "longitude": 32.5, "bordering_countries": ["egypt", "israel", "yemen", "saudi_arabia"], "commodities": ["wheat", "fertilizer", "crude_oil", "lpg", "lumber", "transport"], "annual_trade_value_usd": 1100000000000, "alternative_route_capacity": 0.45},
-    "strait_of_hormuz": {"name": "Strait of Hormuz", "latitude": 26.5, "longitude": 56.5, "bordering_countries": ["iran", "oman", "united_arab_emirates"], "commodities": ["crude_oil", "lpg", "fertilizer", "transport"], "annual_trade_value_usd": 1200000000000, "alternative_route_capacity": 0.15},
-    "taiwan_strait": {"name": "Taiwan Strait", "latitude": 24.0, "longitude": 119.5, "bordering_countries": ["china", "taiwan"], "commodities": ["steel", "lpg", "copper"], "annual_trade_value_usd": 1300000000000, "alternative_route_capacity": 0.4},
-    "south_china_sea": {"name": "South China Sea", "latitude": 12.0, "longitude": 114.0, "bordering_countries": ["china", "vietnam", "philippines", "malaysia", "indonesia", "brunei"], "commodities": ["crude_oil", "steel", "copper", "lumber", "rice"], "annual_trade_value_usd": 3500000000000, "alternative_route_capacity": 0.3},
-    "strait_of_malacca": {"name": "Strait of Malacca", "latitude": 2.5, "longitude": 101.0, "bordering_countries": ["malaysia", "indonesia", "singapore"], "commodities": ["crude_oil", "lpg", "rice", "copper"], "annual_trade_value_usd": 1500000000000, "alternative_route_capacity": 0.5},
-    "indus_arabian_sea": {"name": "Indus & Arabian Sea Ports", "latitude": 24.0, "longitude": 67.0, "bordering_countries": ["pakistan", "india", "iran", "oman"], "commodities": ["wheat", "rice", "fertilizer", "steel"], "annual_trade_value_usd": 350000000000, "alternative_route_capacity": 0.4},
-    "panama_canal": {"name": "Panama Canal", "latitude": 9.0, "longitude": -79.7, "bordering_countries": ["panama", "united_states", "colombia"], "commodities": ["wheat", "corn", "copper", "crude_oil"], "annual_trade_value_usd": 270000000000, "alternative_route_capacity": 0.6}
+    "black_sea": {"name": "Black Sea", "latitude": 43.5, "longitude": 34.0, "bordering_countries": ["ukraine", "russia", "turkey", "romania", "bulgaria", "georgia"], "commodities": ["wheat", "corn", "fertilizer", "crude_oil", "lpg", "steel"], "origin_basins": ["black_sea", "eastern_europe"], "annual_trade_value_usd": 600000000000, "alternative_route_capacity": 0.35},
+    "baltic_sea": {"name": "Baltic Sea", "latitude": 57.0, "longitude": 20.0, "bordering_countries": ["russia", "finland", "sweden", "denmark", "germany", "poland", "lithuania", "latvia", "estonia"], "commodities": ["crude_oil", "lpg", "fertilizer", "steel", "lumber", "transport"], "origin_basins": ["baltic", "eastern_europe"], "annual_trade_value_usd": 1000000000000, "alternative_route_capacity": 0.55},
+    "suez_canal": {"name": "Suez Canal & Red Sea", "latitude": 30.0, "longitude": 32.5, "bordering_countries": ["egypt", "israel", "yemen", "saudi_arabia"], "commodities": ["wheat", "fertilizer", "crude_oil", "lpg", "lumber", "transport"], "origin_basins": ["black_sea", "eastern_europe", "middle_east", "south_asia", "asia"], "annual_trade_value_usd": 1100000000000, "alternative_route_capacity": 0.45},
+    "strait_of_hormuz": {"name": "Strait of Hormuz", "latitude": 26.5, "longitude": 56.5, "bordering_countries": ["iran", "oman", "united_arab_emirates"], "commodities": ["crude_oil", "lpg", "fertilizer", "transport"], "origin_basins": ["persian_gulf", "middle_east"], "annual_trade_value_usd": 1200000000000, "alternative_route_capacity": 0.15},
+    "taiwan_strait": {"name": "Taiwan Strait", "latitude": 24.0, "longitude": 119.5, "bordering_countries": ["china", "taiwan"], "commodities": ["steel", "lpg", "copper"], "origin_basins": ["east_asia"], "annual_trade_value_usd": 1300000000000, "alternative_route_capacity": 0.4},
+    "south_china_sea": {"name": "South China Sea", "latitude": 12.0, "longitude": 114.0, "bordering_countries": ["china", "vietnam", "philippines", "malaysia", "indonesia", "brunei"], "commodities": ["crude_oil", "steel", "copper", "lumber", "rice"], "origin_basins": ["southeast_asia", "east_asia"], "annual_trade_value_usd": 3500000000000, "alternative_route_capacity": 0.3},
+    "strait_of_malacca": {"name": "Strait of Malacca", "latitude": 2.5, "longitude": 101.0, "bordering_countries": ["malaysia", "indonesia", "singapore"], "commodities": ["wheat", "corn", "crude_oil", "lpg", "rice", "copper"], "origin_basins": ["southeast_asia", "east_asia", "south_asia_secondary"], "annual_trade_value_usd": 1500000000000, "alternative_route_capacity": 0.5},
+    "indus_arabian_sea": {"name": "Indus & Arabian Sea Ports", "latitude": 24.0, "longitude": 67.0, "bordering_countries": ["pakistan", "india", "iran", "oman"], "commodities": ["wheat", "rice", "fertilizer", "steel"], "origin_basins": ["arabian_sea", "south_asia"], "annual_trade_value_usd": 350000000000, "alternative_route_capacity": 0.4},
+    "bay_of_bengal": {"name": "Bay of Bengal", "latitude": 15.0, "longitude": 89.0, "bordering_countries": ["india", "bangladesh", "myanmar", "sri_lanka"], "commodities": ["rice", "steel", "wheat", "corn", "fertilizer"], "origin_basins": ["bay_of_bengal", "south_asia"], "annual_trade_value_usd": null, "alternative_route_capacity": 0.4, "description": "Regional sea corridor serving South Asian ports; route throughput value is unavailable in the public source snapshot."},
+    "panama_canal": {"name": "Panama Canal", "latitude": 9.0, "longitude": -79.7, "bordering_countries": ["panama", "united_states", "colombia"], "commodities": ["wheat", "corn", "copper", "crude_oil"], "origin_basins": ["americas", "asia_pacific"], "annual_trade_value_usd": 270000000000, "alternative_route_capacity": 0.6}
   },
   "relations": [
     {"from": "russia", "to": "belarus", "relation": "ally", "reason": "Formal security alignment and deep military integration."},
@@ -158,6 +217,10 @@
     {"from": "ukraine", "to": "romania", "relation": "partner", "reason": "Regional security and Black Sea logistics cooperation."},
     {"from": "pakistan", "to": "china", "relation": "ally", "reason": "All-weather strategic partnership."},
     {"from": "pakistan", "to": "saudi_arabia", "relation": "partner", "reason": "Longstanding defense and economic cooperation."},
+    {"from": "india", "to": "united_states", "relation": "partner", "reason": "Quad coordination and defense cooperation; not a mutual-defense treaty."},
+    {"from": "india", "to": "russia", "relation": "partner", "reason": "Longstanding defense and military-technical relationship."},
+    {"from": "india", "to": "france", "relation": "partner", "reason": "Bilateral strategic and defense cooperation."},
+    {"from": "india", "to": "japan", "relation": "partner", "reason": "Quad coordination and bilateral strategic cooperation."},
     {"from": "united_states", "to": "japan", "relation": "ally", "reason": "Mutual security treaty."},
     {"from": "united_states", "to": "united_kingdom", "relation": "ally", "reason": "NATO and bilateral defense relationship."},
     {"from": "china", "to": "united_states", "relation": "adversary", "reason": "Strategic competition; not a formal state of war."}
