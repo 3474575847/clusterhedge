@@ -1,5 +1,9 @@
 # ClusterHedge
 
+[Project documentation](https://3474575847.github.io/clusterhedge/) ·
+[Download source ZIP](https://github.com/3474575847/clusterhedge/archive/refs/heads/main.zip) ·
+[View source on GitHub](https://github.com/3474575847/clusterhedge)
+
 ClusterHedge is an experimental Flask application for exploring material cost
 exposure, proxy-ETF relationships, scenario analysis, and supply-chain risks.
 It includes project/material tracking, Monte Carlo simulations, hedge
@@ -25,10 +29,13 @@ enter confidential or sensitive information.
 - The UI loads Tailwind CSS, vis-network, and fonts from external CDNs.
 - This repository does not include a production deployment configuration.
 
-## Run locally
+## Download and run locally
 
 Python 3.11 or newer is recommended. Native geospatial dependencies may require
-platform-specific setup.
+platform-specific setup. You can either clone the repository or
+[download its ZIP archive](https://github.com/3474575847/clusterhedge/archive/refs/heads/main.zip)
+and extract it. The [local setup guide](docs/local-setup.md) is also available
+to download.
 
 ```bash
 git clone https://github.com/3474575847/clusterhedge.git
@@ -41,7 +48,7 @@ cp .env.example .env
 python app.py
 ```
 
-Open <http://127.0.0.1:5000>. On Windows, activate the environment with
+Open <http://127.0.0.1:5011>. On Windows, activate the environment with
 `.venv\Scripts\activate` instead of the `source` command.
 
 The generated `.env` is for local development only. Set a private `SECRET_KEY`
