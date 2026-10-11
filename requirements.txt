@@ -1,0 +1,12 @@
+flask
+flask-sqlalchemy
+pandas
+numpy
+scipy
+statsmodels
+yfinance
+geopandas
+requests
+matplotlib
+pyyaml
+python-dotenv

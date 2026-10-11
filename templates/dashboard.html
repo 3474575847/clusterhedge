@@ -1,0 +1,174 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<!-- Page header -->
+<div class="flex items-start justify-between mb-8">
+    <div>
+        <h1 class="text-2xl font-bold text-white tracking-tight">Portfolio</h1>
+        <p class="text-sm text-slate-500 mt-1">Track material risk and hedge recommendations across all active projects.</p>
+    </div>
+    <div class="flex items-center gap-2">
+        <span class="badge badge-green">
+            <span class="live-dot" style="width:5px;height:5px;border-radius:50%;background:currentColor;display:inline-block;"></span>
+            MCE Live
+        </span>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Projects grid -->
+    <div class="lg:col-span-2 space-y-4">
+
+        <!-- Summary stats -->
+        <div class="grid grid-cols-3 gap-3 mb-6">
+            <div class="stat-card">
+                <div class="stat-label">Active Projects</div>
+                <div class="stat-value">{{ projects|length }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Materials</div>
+                <div class="stat-value">{{ total_materials }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Hedge Recs</div>
+                <div class="stat-value text-cobalt-500">{{ total_hedges }}</div>
+            </div>
+        </div>
+
+        <!-- Project cards -->
+        {% for project in projects %}
+        <a href="/project/{{ project.id }}" class="card block p-5 hover:border-slate-600 group animate-fade-in" style="animation-delay: {{ loop.index0 * 0.05 }}s; text-decoration: none;">
+            <div class="flex items-start justify-between mb-4">
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1">
+                        <h3 class="text-sm font-semibold text-slate-100 group-hover:text-cobalt-400 transition-colors truncate">{{ project.name }}</h3>
+                        {% if project.var_95 %}
+                        <span class="badge badge-amber flex-shrink-0">Risk Scored</span>
+                        {% endif %}
+                        {% if project.hedge_recommendations %}
+                        <span class="badge badge-green flex-shrink-0">Hedged</span>
+                        {% endif %}
+                    </div>
+                    <p class="text-xs text-slate-500 line-clamp-1">{{ project.description or 'No description provided.' }}</p>
+                </div>
+                <span class="badge badge-gray ml-3 flex-shrink-0">#{{ project.id }}</span>
+            </div>
+
+            <div class="grid grid-cols-4 gap-2 mt-4">
+                <div class="stat-card" style="padding: 10px 12px;">
+                    <div class="stat-label" style="font-size:8px;">Materials</div>
+                    <div class="stat-value" style="font-size:16px;">{{ project.materials|length }}</div>
+                </div>
+                <div class="stat-card" style="padding: 10px 12px;">
+                    <div class="stat-label" style="font-size:8px;">VaR 95%</div>
+                    <div class="stat-value" style="font-size:14px; color: {{ '#f87171' if project.var_95 else '#475569' }};">
+                        {% if project.var_95 %}${{ project.var_95|round(0)|int }}{% else %}—{% endif %}
+                    </div>
+                </div>
+                <div class="stat-card" style="padding: 10px 12px;">
+                    <div class="stat-label" style="font-size:8px;">Hedges</div>
+                    <div class="stat-value" style="font-size:16px; color: #38bdf8;">{{ project.hedge_recommendations|length }}</div>
+                </div>
+                <div class="stat-card" style="padding: 10px 12px;">
+                    <div class="stat-label" style="font-size:8px;">ESG</div>
+                    <div class="stat-value" style="font-size:14px; color: #10b981;">
+                        {% if project.sustainability_premium %}+{{ project.sustainability_premium|round(1) }}%{% else %}—{% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {% if project.location_name %}
+            <div class="mt-3 flex items-center gap-1.5 text-[10px] text-slate-600 font-mono">
+                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                {{ project.location_name }}
+            </div>
+            {% endif %}
+        </a>
+        {% else %}
+        <!-- Empty state -->
+        <div class="card p-16 text-center animate-fade-in">
+            <div class="w-14 h-14 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center mx-auto mb-5">
+                <svg class="w-7 h-7 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+            </div>
+            <h3 class="text-sm font-semibold text-slate-300 mb-2">No projects yet</h3>
+            <p class="text-xs text-slate-500 max-w-xs mx-auto leading-relaxed">Create your first project to start tracking material correlations and generating hedge recommendations.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Right panel -->
+    <div class="space-y-4">
+        <!-- New project form -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">New Project</span>
+                <span class="card-badge">Blueprint Engine</span>
+            </div>
+            <div class="p-5">
+                <form action="/project/add" method="POST" class="space-y-4" data-loading="Creating project...">
+                    <div>
+                        <label class="field-label">Project Title</label>
+                        <input type="text" name="name" required class="input" placeholder="e.g. Copper Workshop Q3">
+                    </div>
+                    <div>
+                        <label class="field-label">Location</label>
+                        <input type="text" name="location_name" class="input" placeholder="e.g. San Francisco, CA">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="field-label">Latitude</label>
+                            <input type="number" step="any" name="lat" class="input" placeholder="37.7749">
+                        </div>
+                        <div>
+                            <label class="field-label">Longitude</label>
+                            <input type="number" step="any" name="lon" class="input" placeholder="-122.4194">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="field-label">Description</label>
+                        <textarea name="description" class="input" style="height: 80px; resize: none;" placeholder="Describe the project scope and materials..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-secondary w-full" style="justify-content: center;">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Generate Blueprint
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Market signals -->
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Market Signals</span>
+                <span class="badge badge-blue">Indicative</span>
+            </div>
+            <div class="p-4 space-y-1">
+                {% set signals = [
+                    ('CPER', 'Copper ETF', '+1.2%', 'green'),
+                    ('WOOD', 'Lumber ETF', '-0.4%', 'red'),
+                    ('SLX', 'Steel ETF', '0.0%', 'gray'),
+                    ('USO', 'Crude Oil', '+2.1%', 'green'),
+                    ('WEAT', 'Wheat', '-0.9%', 'red'),
+                ] %}
+                {% for ticker, name, chg, color in signals %}
+                <div class="flex items-center justify-between py-2 border-b border-slate-800 last:border-0">
+                    <div class="flex items-center gap-2.5">
+                        <span class="text-[10px] font-bold font-mono text-slate-300 w-10">{{ ticker }}</span>
+                        <span class="text-[10px] text-slate-600">{{ name }}</span>
+                    </div>
+                    <span class="text-[11px] font-bold font-mono {{ 'text-emerald-400' if color == 'green' else ('text-red-400' if color == 'red' else 'text-slate-500') }}">{{ chg }}</span>
+                </div>
+                {% endfor %}
+                <p class="text-[9px] text-slate-700 font-mono pt-2">Indicative only · Not financial advice</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

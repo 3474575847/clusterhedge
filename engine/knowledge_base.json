@@ -1,0 +1,210 @@
+{
+  "metadata": {
+    "version": 1,
+    "data_note": "Static, approximate scenario inputs assembled for an educational prototype. Export shares, elasticities, annual trade values, route capacities, volatilities, and BOM costs are not live data and should be replaced with dated UN Comtrade, FAOSTAT, World Bank, UNCTAD, and market-price observations before operational use.",
+    "sources": [
+      "UN Comtrade (recommended source for merchandise export shares; values here are illustrative approximations)",
+      "FAOSTAT (recommended source for agricultural trade shares; values here are illustrative approximations)",
+      "World Bank Commodity Markets / Pink Sheet (recommended price-volatility source; values here are illustrative assumptions)",
+      "World Bank and UNCTAD maritime trade publications (recommended sources for route traffic; values here are illustrative estimates)"
+    ]
+  },
+  "countries": {
+    "ukraine": {
+      "name": "Ukraine",
+      "exports": {"wheat": 8.0, "corn": 15.0, "fertilizer": 1.0, "steel": 2.5, "lumber": 2.1}
+    },
+    "russia": {
+      "name": "Russia",
+      "exports": {"wheat": 20.0, "corn": 2.5, "fertilizer": 16.0, "crude_oil": 11.0, "lpg": 8.0, "steel": 4.0, "lumber": 2.4}
+    },
+    "pakistan": {
+      "name": "Pakistan",
+      "exports": {"wheat": 1.5, "rice": 8.0, "fertilizer": 1.8}
+    },
+    "iran": {
+      "name": "Iran",
+      "exports": {"crude_oil": 4.0, "lpg": 4.0, "steel": 2.0}
+    },
+    "china": {
+      "name": "China",
+      "exports": {"corn": 2.0, "fertilizer": 10.0, "steel": 55.0, "rice": 7.0, "copper": 8.0, "lumber": 2.0}
+    },
+    "belarus": {
+      "name": "Belarus",
+      "exports": {"fertilizer": 7.0}
+    },
+    "india": {
+      "name": "India",
+      "exports": {"wheat": 1.5, "fertilizer": 2.0, "steel": 6.0, "rice": 26.0}
+    },
+    "thailand": {
+      "name": "Thailand",
+      "exports": {"rice": 15.0}
+    },
+    "vietnam": {
+      "name": "Vietnam",
+      "exports": {"rice": 12.0}
+    },
+    "united_states": {
+      "name": "United States",
+      "exports": {"wheat": 10.0, "corn": 30.0, "crude_oil": 13.0, "lpg": 20.0, "lumber": 13.0}
+    },
+    "canada": {
+      "name": "Canada",
+      "exports": {"wheat": 13.0, "fertilizer": 12.0, "lumber": 18.0}
+    },
+    "australia": {
+      "name": "Australia",
+      "exports": {"wheat": 10.0}
+    },
+    "argentina": {
+      "name": "Argentina",
+      "exports": {"wheat": 6.0, "corn": 4.0}
+    },
+    "brazil": {
+      "name": "Brazil",
+      "exports": {"corn": 22.0}
+    },
+    "france": {
+      "name": "France",
+      "exports": {"wheat": 7.0}
+    },
+    "kazakhstan": {
+      "name": "Kazakhstan",
+      "exports": {"wheat": 4.0}
+    },
+    "morocco": {
+      "name": "Morocco",
+      "exports": {"fertilizer": 8.0}
+    },
+    "saudi_arabia": {
+      "name": "Saudi Arabia",
+      "exports": {"crude_oil": 12.0, "lpg": 5.0}
+    },
+    "qatar": {
+      "name": "Qatar",
+      "exports": {"lpg": 10.0}
+    },
+    "iraq": {
+      "name": "Iraq",
+      "exports": {"crude_oil": 5.0}
+    },
+    "united_arab_emirates": {
+      "name": "United Arab Emirates",
+      "exports": {"crude_oil": 4.0}
+    },
+    "japan": {
+      "name": "Japan",
+      "exports": {"steel": 5.0}
+    },
+    "sweden": {
+      "name": "Sweden",
+      "exports": {"lumber": 6.0}
+    },
+    "finland": {
+      "name": "Finland",
+      "exports": {"lumber": 4.0}
+    },
+    "chile": {
+      "name": "Chile",
+      "exports": {"copper": 27.0}
+    },
+    "peru": {
+      "name": "Peru",
+      "exports": {"copper": 10.0}
+    },
+    "democratic_republic_of_the_congo": {
+      "name": "Democratic Republic of the Congo",
+      "exports": {"copper": 3.0}
+    },
+    "egypt": {
+      "name": "Egypt",
+      "exports": {"transport": 3.0}
+    },
+    "yemen": {
+      "name": "Yemen",
+      "exports": {"crude_oil": 2.2}
+    }
+  },
+  "commodities": {
+    "wheat": {"name": "Wheat", "elasticity": 0.8, "annual_volatility": 0.28, "pricing_horizon_hours": 48, "chokepoints": ["black_sea", "suez_canal", "indus_arabian_sea", "panama_canal"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; validate against FAOSTAT trade and World Bank commodity price series."},
+    "corn": {"name": "Corn", "elasticity": 0.7, "annual_volatility": 0.25, "pricing_horizon_hours": 48, "chokepoints": ["black_sea", "panama_canal"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; validate against FAOSTAT and World Bank series."},
+    "fertilizer": {"name": "Fertilizer", "elasticity": 0.9, "annual_volatility": 0.35, "pricing_horizon_hours": 72, "chokepoints": ["black_sea", "baltic_sea", "suez_canal", "strait_of_hormuz", "indus_arabian_sea"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; fertilizer aggregates several products."},
+    "crude_oil": {"name": "Crude Oil", "elasticity": 1.0, "annual_volatility": 0.32, "pricing_horizon_hours": 24, "chokepoints": ["baltic_sea", "black_sea", "strait_of_hormuz", "suez_canal", "south_china_sea", "panama_canal", "strait_of_malacca"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; validate against World Bank Brent/Dubai price series."},
+    "lpg": {"name": "LPG", "elasticity": 0.9, "annual_volatility": 0.30, "pricing_horizon_hours": 48, "chokepoints": ["baltic_sea", "black_sea", "strait_of_hormuz", "suez_canal", "strait_of_malacca", "taiwan_strait"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; LPG is a heterogeneous market."},
+    "steel": {"name": "Steel", "elasticity": 0.5, "annual_volatility": 0.22, "pricing_horizon_hours": 72, "chokepoints": ["black_sea", "baltic_sea", "taiwan_strait", "south_china_sea", "indus_arabian_sea"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; steel products are aggregated."},
+    "lumber": {"name": "Lumber", "elasticity": 0.4, "annual_volatility": 0.38, "pricing_horizon_hours": 72, "chokepoints": ["baltic_sea", "suez_canal", "south_china_sea"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; validate against lumber futures and World Bank timber series."},
+    "rice": {"name": "Rice", "elasticity": 0.75, "annual_volatility": 0.20, "pricing_horizon_hours": 48, "chokepoints": ["indus_arabian_sea", "strait_of_malacca", "south_china_sea"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; validate against FAOSTAT and World Bank rice prices."},
+    "copper": {"name": "Copper", "elasticity": 0.6, "annual_volatility": 0.24, "pricing_horizon_hours": 48, "chokepoints": ["strait_of_malacca", "south_china_sea", "panama_canal", "taiwan_strait"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; validate against World Bank copper series."},
+    "transport": {"name": "Transport", "elasticity": 0.35, "annual_volatility": 0.18, "pricing_horizon_hours": 72, "export_share_proxy": "crude_oil", "chokepoints": ["baltic_sea", "black_sea", "suez_canal", "strait_of_hormuz", "strait_of_malacca", "panama_canal"], "source_note": "Transport is an oil-linked cost proxy using crude-oil exporting shares; pricing horizon, volatility, and elasticity are illustrative. It is not a separately measured global export market."}
+  },
+  "chokepoints": {
+    "black_sea": {"name": "Black Sea", "latitude": 43.5, "longitude": 34.0, "bordering_countries": ["ukraine", "russia", "turkey", "romania", "bulgaria", "georgia"], "commodities": ["wheat", "corn", "fertilizer", "crude_oil", "lpg", "steel"], "annual_trade_value_usd": 600000000000, "alternative_route_capacity": 0.35},
+    "baltic_sea": {"name": "Baltic Sea", "latitude": 57.0, "longitude": 20.0, "bordering_countries": ["russia", "finland", "sweden", "denmark", "germany", "poland", "lithuania", "latvia", "estonia"], "commodities": ["crude_oil", "lpg", "fertilizer", "steel", "lumber", "transport"], "annual_trade_value_usd": 1000000000000, "alternative_route_capacity": 0.55},
+    "suez_canal": {"name": "Suez Canal & Red Sea", "latitude": 30.0, "longitude": 32.5, "bordering_countries": ["egypt", "israel", "yemen", "saudi_arabia"], "commodities": ["wheat", "fertilizer", "crude_oil", "lpg", "lumber", "transport"], "annual_trade_value_usd": 1100000000000, "alternative_route_capacity": 0.45},
+    "strait_of_hormuz": {"name": "Strait of Hormuz", "latitude": 26.5, "longitude": 56.5, "bordering_countries": ["iran", "oman", "united_arab_emirates"], "commodities": ["crude_oil", "lpg", "fertilizer", "transport"], "annual_trade_value_usd": 1200000000000, "alternative_route_capacity": 0.15},
+    "taiwan_strait": {"name": "Taiwan Strait", "latitude": 24.0, "longitude": 119.5, "bordering_countries": ["china", "taiwan"], "commodities": ["steel", "lpg", "copper"], "annual_trade_value_usd": 1300000000000, "alternative_route_capacity": 0.4},
+    "south_china_sea": {"name": "South China Sea", "latitude": 12.0, "longitude": 114.0, "bordering_countries": ["china", "vietnam", "philippines", "malaysia", "indonesia", "brunei"], "commodities": ["crude_oil", "steel", "copper", "lumber", "rice"], "annual_trade_value_usd": 3500000000000, "alternative_route_capacity": 0.3},
+    "strait_of_malacca": {"name": "Strait of Malacca", "latitude": 2.5, "longitude": 101.0, "bordering_countries": ["malaysia", "indonesia", "singapore"], "commodities": ["crude_oil", "lpg", "rice", "copper"], "annual_trade_value_usd": 1500000000000, "alternative_route_capacity": 0.5},
+    "indus_arabian_sea": {"name": "Indus & Arabian Sea Ports", "latitude": 24.0, "longitude": 67.0, "bordering_countries": ["pakistan", "india", "iran", "oman"], "commodities": ["wheat", "rice", "fertilizer", "steel"], "annual_trade_value_usd": 350000000000, "alternative_route_capacity": 0.4},
+    "panama_canal": {"name": "Panama Canal", "latitude": 9.0, "longitude": -79.7, "bordering_countries": ["panama", "united_states", "colombia"], "commodities": ["wheat", "corn", "copper", "crude_oil"], "annual_trade_value_usd": 270000000000, "alternative_route_capacity": 0.6}
+  },
+  "relations": [
+    {"from": "russia", "to": "belarus", "relation": "ally", "reason": "Formal security alignment and deep military integration."},
+    {"from": "russia", "to": "iran", "relation": "partner", "reason": "Documented defense and military-technology cooperation; partnership does not imply automatic intervention."},
+    {"from": "russia", "to": "china", "relation": "partner", "reason": "Strategic and economic partnership; it does not imply a mutual-defense obligation."},
+    {"from": "ukraine", "to": "poland", "relation": "partner", "reason": "Regional security and logistics cooperation."},
+    {"from": "ukraine", "to": "romania", "relation": "partner", "reason": "Regional security and Black Sea logistics cooperation."},
+    {"from": "pakistan", "to": "china", "relation": "ally", "reason": "All-weather strategic partnership."},
+    {"from": "pakistan", "to": "saudi_arabia", "relation": "partner", "reason": "Longstanding defense and economic cooperation."},
+    {"from": "united_states", "to": "japan", "relation": "ally", "reason": "Mutual security treaty."},
+    {"from": "united_states", "to": "united_kingdom", "relation": "ally", "reason": "NATO and bilateral defense relationship."},
+    {"from": "china", "to": "united_states", "relation": "adversary", "reason": "Strategic competition; not a formal state of war."}
+  ],
+  "severity_multipliers": {"low": 0.2, "medium": 0.5, "high": 0.8, "critical": 1.0},
+  "historical_events": {
+    "russia_ukraine_2022": {"label": "Russia–Ukraine 2022", "country_a": "Ukraine", "country_b": "Russia", "severity": "high", "duration_days": 90, "actual_price_changes": {"wheat": 0.35, "corn": 0.25, "fertilizer": 0.30, "crude_oil": 0.20, "lpg": 0.18, "steel": 0.12, "lumber": 0.10}},
+    "suez_blockage_2021": {"label": "Suez blockage 2021", "country_a": "Egypt", "country_b": "Yemen", "severity": "medium", "duration_days": 7, "actual_price_changes": {"crude_oil": 0.06, "lpg": 0.04, "wheat": 0.02, "fertilizer": 0.02, "transport": 0.08}},
+    "covid_ports_2020": {"label": "COVID port closures 2020", "country_a": "China", "country_b": "United States", "severity": "high", "duration_days": 120, "actual_price_changes": {"steel": 0.25, "copper": 0.30, "lumber": 0.60, "rice": 0.15, "crude_oil": -0.20, "transport": 0.40}}
+  },
+  "boms": {
+    "singapore international school mumbai": {
+      "name": "Singapore International School Mumbai",
+      "items": [
+        {"name": "Wheat-based food", "commodity": "wheat", "quantity": 1, "base_cost": 12000},
+        {"name": "Rice", "commodity": "rice", "quantity": 1, "base_cost": 18000},
+        {"name": "Corn-based food", "commodity": "corn", "quantity": 1, "base_cost": 7000},
+        {"name": "Heating and backup oil", "commodity": "crude_oil", "quantity": 1, "base_cost": 14000},
+        {"name": "Kitchen LPG", "commodity": "lpg", "quantity": 1, "base_cost": 9000},
+        {"name": "Fertilizer for grounds", "commodity": "fertilizer", "quantity": 1, "base_cost": 5000},
+        {"name": "Structural steel", "commodity": "steel", "quantity": 1, "base_cost": 42000},
+        {"name": "Lumber", "commodity": "lumber", "quantity": 1, "base_cost": 16000},
+        {"name": "Copper wiring", "commodity": "copper", "quantity": 1, "base_cost": 11000},
+        {"name": "Transport and freight", "commodity": "transport", "quantity": 1, "base_cost": 22000}
+      ]
+    },
+    "default_factory": {
+      "name": "Factory",
+      "items": [
+        {"name": "Steel", "commodity": "steel", "quantity": 1, "base_cost": 50000},
+        {"name": "Copper", "commodity": "copper", "quantity": 1, "base_cost": 25000},
+        {"name": "Lumber", "commodity": "lumber", "quantity": 1, "base_cost": 10000},
+        {"name": "Energy oil", "commodity": "crude_oil", "quantity": 1, "base_cost": 15000},
+        {"name": "Freight", "commodity": "transport", "quantity": 1, "base_cost": 12000}
+      ]
+    },
+    "default_school": {
+      "name": "School",
+      "items": [
+        {"name": "Food grains", "commodity": "wheat", "quantity": 1, "base_cost": 10000},
+        {"name": "Rice", "commodity": "rice", "quantity": 1, "base_cost": 10000},
+        {"name": "Energy", "commodity": "crude_oil", "quantity": 1, "base_cost": 12000},
+        {"name": "LPG", "commodity": "lpg", "quantity": 1, "base_cost": 7000},
+        {"name": "Steel", "commodity": "steel", "quantity": 1, "base_cost": 30000},
+        {"name": "Lumber", "commodity": "lumber", "quantity": 1, "base_cost": 10000},
+        {"name": "Freight", "commodity": "transport", "quantity": 1, "base_cost": 12000}
+      ]
+    }
+  }
+}

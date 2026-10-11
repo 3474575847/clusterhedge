@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClusterHedge | Quantitative Maker Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            900: '#0f172a',
+                            850: '#131c2e',
+                            800: '#1e293b',
+                            750: '#243044',
+                            700: '#334155',
+                        },
+                        cobalt: {
+                            400: '#7dd3fc',
+                            500: '#38bdf8',
+                            600: '#0ea5e9',
+                        },
+                        emerald: {
+                            400: '#34d399',
+                            500: '#10b981',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    boxShadow: {
+                        'glow-cobalt': '0 0 20px rgba(56, 189, 248, 0.15)',
+                        'glow-emerald': '0 0 20px rgba(16, 185, 129, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: #0f172a;
+            color: #f1f5f9;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        /* Sidebar */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #94a3b8;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            gap: 10px;
+            position: relative;
+        }
+        .sidebar-link:hover {
+            background: #1e293b;
+            color: #f1f5f9;
+        }
+        .sidebar-link.active {
+            background: rgba(56, 189, 248, 0.08);
+            color: #38bdf8;
+            border: 1px solid rgba(56, 189, 248, 0.15);
+        }
+        .sidebar-link.active .nav-icon { color: #38bdf8; }
+
+        /* Card */
+        .card {
+            background: #131c2e;
+            border: 1px solid #1e293b;
+            border-radius: 10px;
+            transition: border-color 0.2s ease;
+        }
+        .card:hover { border-color: #334155; }
+        .card-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .card-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #cbd5e1;
+        }
+        .card-badge {
+            font-size: 9px;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #64748b;
+        }
+
+        /* Inputs */
+        .input {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 13px;
+            color: #f1f5f9;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .input:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+        }
+        .input::placeholder { color: #475569; }
+        label.field-label {
+            display: block;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-primary {
+            background: #38bdf8;
+            color: #0f172a;
+            border-color: #38bdf8;
+        }
+        .btn-primary:hover { background: #0ea5e9; border-color: #0ea5e9; }
+        .btn-secondary {
+            background: transparent;
+            color: #94a3b8;
+            border-color: #334155;
+        }
+        .btn-secondary:hover { border-color: #475569; color: #f1f5f9; background: #1e293b; }
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        .btn-danger:hover { background: rgba(239, 68, 68, 0.2); }
+        .btn-ghost {
+            background: transparent;
+            color: #64748b;
+            border-color: transparent;
+        }
+        .btn-ghost:hover { color: #f1f5f9; background: #1e293b; }
+        .btn-loading { position: relative; color: transparent !important; }
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 12px; height: 12px;
+            border: 2px solid currentColor;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            color: #0f172a;
+        }
+
+        /* Status badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 9px;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 2px 7px;
+            border-radius: 4px;
+        }
+        .badge-green { background: rgba(16, 185, 129, 0.1); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .badge-blue  { background: rgba(56, 189, 248, 0.1); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.2); }
+        .badge-red   { background: rgba(239, 68, 68, 0.1);  color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .badge-amber { background: rgba(245, 158, 11, 0.1); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.2); }
+        .badge-gray  { background: #1e293b; color: #64748b; border: 1px solid #334155; }
+
+        /* Stat card */
+        .stat-card {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 14px;
+        }
+        .stat-label {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #475569;
+            margin-bottom: 6px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #f1f5f9;
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
+        }
+
+        /* Table */
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #475569;
+            padding: 10px 16px;
+            text-align: left;
+            border-bottom: 1px solid #1e293b;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .data-table td {
+            font-size: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid #131c2e;
+            color: #cbd5e1;
+        }
+        .data-table tbody tr:hover td { background: rgba(30, 41, 59, 0.4); }
+        .data-table tbody tr:last-child td { border-bottom: none; }
+
+        /* Toast */
+        #toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #f1f5f9;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            pointer-events: all;
+            animation: slideInRight 0.25s ease;
+            max-width: 320px;
+        }
+        .toast.success { border-color: rgba(16, 185, 129, 0.4); }
+        .toast.error   { border-color: rgba(239, 68, 68, 0.4); }
+        .toast.info    { border-color: rgba(56, 189, 248, 0.4); }
+        .toast-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+        .toast.success .toast-dot { background: #10b981; }
+        .toast.error   .toast-dot { background: #ef4444; }
+        .toast.info    .toast-dot { background: #38bdf8; }
+
+        /* Progress bar */
+        .progress-bar {
+            height: 3px;
+            background: #1e293b;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 2px;
+            background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Divider */
+        .divider { height: 1px; background: #1e293b; }
+
+        /* Animations */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(16px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.3; }
+        }
+        .animate-fade-in { animation: fadeIn 0.3s ease both; }
+        .live-dot { animation: pulse-dot 1.5s ease-in-out infinite; }
+
+        /* Loading overlay */
+        .page-loading {
+            position: fixed; inset: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 9998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        .page-loading.active { opacity: 1; pointer-events: all; }
+        .spinner {
+            width: 32px; height: 32px;
+            border: 2px solid #334155;
+            border-top-color: #38bdf8;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        /* Sidebar status indicator */
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            color: #64748b;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .status-pill .dot {
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        /* Tooltip */
+        [data-tooltip] { position: relative; }
+        [data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #cbd5e1;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s ease;
+            z-index: 100;
+        }
+        [data-tooltip]:hover::after { opacity: 1; }
+
+        /* Kbd shortcut */
+        kbd {
+            font-size: 9px;
+            font-family: 'JetBrains Mono', monospace;
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-bottom-width: 2px;
+            border-radius: 3px;
+            padding: 1px 5px;
+            color: #64748b;
+        }
+
+        /* Number animation */
+        .count-up { transition: all 0.5s ease; }
+    </style>
+</head>
+<body class="h-full flex overflow-hidden">
+
+    <!-- Page loading overlay -->
+    <div class="page-loading" id="page-loading">
+        <div class="flex flex-col items-center gap-3">
+            <div class="spinner"></div>
+            <span class="text-xs text-slate-500 font-mono" id="loading-text">Processing...</span>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div id="toast-container"></div>
+
+    {% if not no_sidebar %}
+    <!-- Sidebar -->
+    <aside class="w-60 flex flex-col h-full border-r border-slate-800" style="background: #0b1120;">
+        <!-- Logo -->
+        <div class="px-5 py-5 border-b border-slate-800">
+            <a href="/" class="flex items-center gap-2.5 group">
+                <div class="w-7 h-7 rounded-lg bg-cobalt-500/10 border border-cobalt-500/20 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-3.5 h-3.5 text-cobalt-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="text-sm font-bold text-white tracking-tight leading-none">ClusterHedge</div>
+                    <div class="text-[9px] text-slate-600 font-mono mt-0.5">v1.0.0-alpha</div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Nav -->
+        <nav class="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+            <div class="px-2 mb-2">
+                <span class="text-[9px] font-bold uppercase tracking-widest text-slate-600 font-mono">Platform</span>
+            </div>
+
+            <a href="/dashboard" class="sidebar-link {{ 'active' if request.path == '/dashboard' else '' }}">
+                <svg class="nav-icon w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10-3a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1v-7z"/>
+                </svg>
+                Portfolio
+            </a>
+
+            <a href="/geopolitical" class="sidebar-link {{ 'active' if request.path == '/geopolitical' else '' }}">
+                <svg class="nav-icon w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Geopolitical Radar
+                <span class="ml-auto badge badge-red" style="font-size:8px; padding: 1px 5px;">Live</span>
+            </a>
+
+            <div class="px-2 mt-5 mb-2">
+                <span class="text-[9px] font-bold uppercase tracking-widest text-slate-600 font-mono">Resources</span>
+            </div>
+
+            <a href="/" class="sidebar-link">
+                <svg class="nav-icon w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                Documentation
+            </a>
+        </nav>
+
+        <!-- Bottom status -->
+        <div class="px-4 py-4 border-t border-slate-800 space-y-3">
+            <div class="status-pill">
+                <span class="dot"></span>
+                <span>MCE Operational</span>
+            </div>
+            <div class="status-pill" style="color: #475569;">
+                <span class="dot" style="background: #38bdf8; animation: none;"></span>
+                <span>Pearson Corr. Active</span>
+            </div>
+        </div>
+    </aside>
+    {% endif %}
+
+    <!-- Main content area -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        {% if not no_sidebar %}
+        <!-- Top bar -->
+        <header class="h-14 border-b border-slate-800 flex items-center justify-between px-6 flex-shrink-0" style="background: #0b1120;">
+            <!-- Breadcrumb -->
+            <nav class="flex items-center gap-1.5 text-xs font-mono">
+                <a href="/" class="text-slate-600 hover:text-slate-400 transition-colors">~</a>
+                {% set parts = request.path.strip('/').split('/') %}
+                {% for part in parts if part %}
+                <span class="text-slate-700">/</span>
+                <span class="text-slate-300 font-medium">{{ part }}</span>
+                {% endfor %}
+                {% if not request.path.strip('/') %}
+                <span class="text-slate-700">/</span>
+                <span class="text-slate-300 font-medium">home</span>
+                {% endif %}
+            </nav>
+
+            <!-- Right actions -->
+            <div class="flex items-center gap-3">
+                <div class="hidden md:flex items-center gap-1.5 text-[10px] text-slate-600 font-mono">
+                    <kbd>⌘</kbd><kbd>K</kbd>
+                    <span class="ml-1">Quick actions</span>
+                </div>
+                <div class="w-px h-4 bg-slate-800"></div>
+                <a href="/dashboard" class="btn btn-primary" style="padding: 6px 14px; font-size: 10px;">
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    New Project
+                </a>
+            </div>
+        </header>
+        {% endif %}
+
+        <!-- Page content -->
+        <main class="flex-1 overflow-y-auto {% if not no_sidebar %}bg-slate-900{% endif %}">
+            <div class="{% if not no_sidebar %}max-w-6xl mx-auto px-6 py-8{% else %}w-full h-full{% endif %}">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <!-- Global JS utilities -->
+    <script>
+        // Toast system
+        function showToast(message, type = 'info', duration = 3500) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type} animate-fade-in`;
+            toast.innerHTML = `<span class="toast-dot"></span><span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(16px)';
+                toast.style.transition = 'all 0.25s ease';
+                setTimeout(() => toast.remove(), 250);
+            }, duration);
+        }
+
+        // Loading overlay
+        function showLoading(text = 'Processing...') {
+            document.getElementById('loading-text').textContent = text;
+            document.getElementById('page-loading').classList.add('active');
+        }
+        function hideLoading() {
+            document.getElementById('page-loading').classList.remove('active');
+        }
+
+        // Button loading state
+        function setButtonLoading(btn, loading, originalText) {
+            if (loading) {
+                btn.dataset.originalText = btn.innerHTML;
+                btn.classList.add('btn-loading');
+                btn.disabled = true;
+            } else {
+                btn.classList.remove('btn-loading');
+                btn.disabled = false;
+                btn.innerHTML = originalText || btn.dataset.originalText;
+            }
+        }
+
+        // Intercept form submissions for loading feedback
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('form[data-loading]').forEach(form => {
+                form.addEventListener('submit', () => {
+                    showLoading(form.dataset.loading);
+                });
+            });
+
+            // Intercept action links
+            document.querySelectorAll('a[data-loading]').forEach(link => {
+                link.addEventListener('click', () => {
+                    showLoading(link.dataset.loading);
+                });
+            });
+
+            // Flash messages from URL params
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('success')) showToast(decodeURIComponent(params.get('success')), 'success');
+            if (params.get('error'))   showToast(decodeURIComponent(params.get('error')), 'error');
+        });
+    </script>
+</body>
+</html>

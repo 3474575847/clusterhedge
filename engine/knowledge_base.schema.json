@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://clusterhedge.local/schemas/knowledge_base.schema.json",
+  "title": "ClusterHedge geopolitical knowledge base",
+  "type": "object",
+  "required": ["metadata", "countries", "commodities", "chokepoints", "relations", "severity_multipliers", "historical_events", "boms"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["version", "data_note", "sources"],
+      "properties": {
+        "version": {"type": "integer"},
+        "data_note": {"type": "string"},
+        "sources": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    },
+    "countries": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["name", "exports"],
+        "properties": {
+          "name": {"type": "string"},
+          "exports": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0, "maximum": 100}}
+        }
+      }
+    },
+    "commodities": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["name", "elasticity", "annual_volatility", "chokepoints", "source_note"],
+        "properties": {
+          "name": {"type": "string"},
+          "elasticity": {"type": "number", "minimum": 0},
+          "annual_volatility": {"type": "number", "exclusiveMinimum": 0},
+          "chokepoints": {"type": "array", "items": {"type": "string"}},
+          "source_note": {"type": "string"}
+        }
+      }
+    },
+    "chokepoints": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["name", "latitude", "longitude", "bordering_countries", "commodities", "annual_trade_value_usd", "alternative_route_capacity"],
+        "properties": {
+          "name": {"type": "string"},
+          "latitude": {"type": "number", "minimum": -90, "maximum": 90},
+          "longitude": {"type": "number", "minimum": -180, "maximum": 180},
+          "bordering_countries": {"type": "array", "items": {"type": "string"}},
+          "commodities": {"type": "array", "items": {"type": "string"}},
+          "annual_trade_value_usd": {"type": "number", "minimum": 0},
+          "alternative_route_capacity": {"type": "number", "minimum": 0, "maximum": 1}
+        }
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "relation", "reason"],
+        "properties": {
+          "from": {"type": "string"},
+          "to": {"type": "string"},
+          "relation": {"enum": ["ally", "partner", "neutral", "adversary"]},
+          "reason": {"type": "string"}
+        }
+      }
+    },
+    "severity_multipliers": {
+      "type": "object",
+      "required": ["low", "medium", "high", "critical"],
+      "additionalProperties": {"type": "number", "minimum": 0, "maximum": 1}
+    },
+    "historical_events": {"type": "object"},
+    "boms": {"type": "object"}
+  },
+  "additionalProperties": true
+}

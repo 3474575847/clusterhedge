@@ -1,0 +1,512 @@
+{% extends "layout.html" %}
+{% set no_sidebar = true %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<style>
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-6px); }
+  }
+  @keyframes ticker {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .fade-up-1 { animation: fadeUp 0.7s ease both 0.1s; opacity: 0; }
+  .fade-up-2 { animation: fadeUp 0.7s ease both 0.3s; opacity: 0; }
+  .fade-up-3 { animation: fadeUp 0.7s ease both 0.5s; opacity: 0; }
+  .fade-up-4 { animation: fadeUp 0.7s ease both 0.7s; opacity: 0; }
+  .fade-up-5 { animation: fadeUp 0.7s ease both 0.9s; opacity: 0; }
+
+  .shimmer-text {
+    background: linear-gradient(90deg, #94a3b8 0%, #38bdf8 40%, #a78bfa 60%, #94a3b8 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s linear infinite;
+  }
+
+  .live-dot {
+    animation: pulse-dot 1.5s ease-in-out infinite;
+  }
+
+  .card-float { animation: float 5s ease-in-out infinite; }
+
+  .ticker-wrap {
+    overflow: hidden;
+    white-space: nowrap;
+    border-top: 1px solid #334155;
+    border-bottom: 1px solid #334155;
+  }
+  .ticker-track {
+    display: inline-flex;
+    animation: ticker 30s linear infinite;
+  }
+
+  .feature-card {
+    background: linear-gradient(135deg, #151e2f 0%, #1e293b 100%);
+    border: 1px solid #334155;
+    border-radius: 12px;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .feature-card:hover {
+    transform: translateY(-3px);
+    border-color: #38bdf8;
+    box-shadow: 0 8px 32px rgba(56, 189, 248, 0.08);
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: -200px; left: 50%; transform: translateX(-50%);
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .stat-num {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  .cta-btn {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    color: #0f172a;
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 14px 36px;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 20px rgba(56, 189, 248, 0.3);
+    text-decoration: none;
+    display: inline-block;
+  }
+  .cta-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(56, 189, 248, 0.45);
+  }
+
+  .nav-link {
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-link:hover { color: #f1f5f9; }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #38bdf8;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .divider { height: 1px; background: #334155; }
+
+  html { scroll-behavior: smooth; }
+
+  .bom-table td, .bom-table th {
+    padding: 8px 12px;
+    font-size: 11px;
+    border-bottom: 1px solid #334155;
+  }
+  .bom-table th { color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+  .bom-table td { color: #cbd5e1; }
+  .bom-table tr:last-child td { border-bottom: none; }
+</style>
+</head>
+
+<!-- NAV -->
+<div class="w-full h-full overflow-y-auto" style="background: #0f172a;">
+<nav class="sticky top-0 z-50 flex items-center justify-between px-8 py-4" style="background: rgba(15,23,42,0.8); border-bottom: 1px solid #1e293b; backdrop-filter: blur(12px);">
+  <a href="/" class="flex items-center space-x-2 text-white font-bold text-lg tracking-tight">
+    <span class="w-2.5 h-2.5 bg-sky-400 rounded-full"></span>
+    <span>ClusterHedge</span>
+    <span class="ml-2 text-[9px] font-mono text-slate-500 uppercase tracking-widest border border-slate-700 px-1.5 py-0.5 rounded">v1.0</span>
+  </a>
+  <div class="hidden md:flex items-center space-x-8">
+    <a href="#how-it-works" class="nav-link">How It Works</a>
+    <a href="#tools" class="nav-link">Tools</a>
+    <a href="#intelligence" class="nav-link">Intelligence</a>
+  </div>
+  <a href="/dashboard" class="cta-btn" style="padding: 8px 20px; font-size: 11px;">
+    Launch App →
+  </a>
+</nav>
+
+<!-- HERO -->
+<section class="relative flex flex-col items-center justify-center text-center px-6 pt-24 pb-32 overflow-hidden">
+  <div class="hero-glow"></div>
+
+  <div class="fade-up-1 section-label mb-5">Open Source · Quantitative Finance · Commodity Intelligence</div>
+
+  <h1 class="fade-up-2 text-5xl md:text-6xl font-bold tracking-tight text-white max-w-4xl mx-auto leading-tight" style="letter-spacing: -0.02em;">
+    Institutional-Grade<br>
+    <span class="shimmer-text">Hedge Intelligence</span><br>
+    for the Maker Economy
+  </h1>
+
+  <p class="fade-up-3 mt-6 text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
+    ClusterHedge bridges raw material costs, local economic clusters, and global financial markets — giving micro-manufacturers the exact same quant tools that hedge funds use to protect themselves from commodity volatility.
+  </p>
+
+  <div class="fade-up-4 flex flex-col sm:flex-row items-center gap-4 mt-10">
+    <a href="/dashboard" class="cta-btn">Try the Tools →</a>
+    <a href="#how-it-works" class="text-slate-400 text-sm font-medium hover:text-white transition-colors">See how it works ↓</a>
+  </div>
+
+  <!-- Live ticker -->
+  <div class="fade-up-5 w-full max-w-4xl mt-16 ticker-wrap rounded-lg">
+    <div class="py-2.5 ticker-track">
+      {% set tickers = [
+        ("COPPER", "+3.2%", "positive"), ("LUMBER", "-1.8%", "negative"), ("STEEL ETF (SLX)", "+2.1%", "positive"),
+        ("CRUDE OIL", "+4.5%", "positive"), ("WHEAT", "-0.9%", "negative"), ("LPG", "+6.2%", "positive"),
+        ("FERTILIZER", "+8.1%", "positive"), ("RICE (FUTURES)", "+1.4%", "positive"), ("CORN", "-2.3%", "negative"),
+        ("COPPER", "+3.2%", "positive"), ("LUMBER", "-1.8%", "negative"), ("STEEL ETF (SLX)", "+2.1%", "positive"),
+        ("CRUDE OIL", "+4.5%", "positive"), ("WHEAT", "-0.9%", "negative"), ("LPG", "+6.2%", "positive"),
+        ("FERTILIZER", "+8.1%", "positive"), ("RICE (FUTURES)", "+1.4%", "positive"), ("CORN", "-2.3%", "negative")
+      ] %}
+      {% for name, chg, direction in tickers %}
+      <span class="inline-flex items-center mx-6 text-xs font-mono">
+        <span class="text-slate-500 mr-2">{{ name }}</span>
+        <span class="{{ 'text-emerald-400' if direction == 'positive' else 'text-red-400' }} font-bold">{{ chg }}</span>
+      </span>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<div class="divider max-w-6xl mx-auto"></div>
+
+<!-- STATS ROW -->
+<section class="py-14 px-6">
+  <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+    <div>
+      <div class="stat-num text-4xl font-bold text-white">1,000</div>
+      <div class="text-slate-500 text-xs uppercase tracking-widest mt-2 font-mono">MC Iterations / Simulation</div>
+    </div>
+    <div>
+      <div class="stat-num text-4xl font-bold text-white">8</div>
+      <div class="text-slate-500 text-xs uppercase tracking-widest mt-2 font-mono">Global Choke Points Mapped</div>
+    </div>
+    <div>
+      <div class="stat-num text-4xl font-bold text-white">95%</div>
+      <div class="text-slate-500 text-xs uppercase tracking-widest mt-2 font-mono">Confidence Interval (VaR)</div>
+    </div>
+    <div>
+      <div class="stat-num text-4xl font-bold text-white">21+</div>
+      <div class="text-slate-500 text-xs uppercase tracking-widest mt-2 font-mono">Country Power Weights</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider max-w-6xl mx-auto"></div>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works" class="py-24 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="section-label mb-4 text-center">The Platform</div>
+    <h2 class="text-3xl font-bold text-white text-center mb-4 tracking-tight">Built for the Physical Economy</h2>
+    <p class="text-slate-400 text-center max-w-2xl mx-auto mb-16 leading-relaxed">
+      Most financial tools are built for equities traders. ClusterHedge is built for people who <em>make things</em> — builders, fabricators, upcyclers, and small manufacturers who are directly exposed to raw material volatility but have no way to quantify or hedge it.
+    </p>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="feature-card p-6">
+        <div class="w-10 h-10 rounded-lg bg-sky-500/10 border border-sky-500/20 flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        </div>
+        <div class="text-[10px] font-mono text-sky-400 uppercase tracking-widest mb-2">Step 1</div>
+        <h3 class="text-base font-bold text-white mb-2">Build Your Bill of Materials</h3>
+        <p class="text-slate-400 text-sm leading-relaxed">Enter the raw materials in your project — copper wire, steel beams, lumber — with quantities and costs. ClusterHedge treats your project like a micro-portfolio with real commodity exposure.</p>
+      </div>
+
+      <div class="feature-card p-6">
+        <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+        </div>
+        <div class="text-[10px] font-mono text-emerald-400 uppercase tracking-widest mb-2">Step 2</div>
+        <h3 class="text-base font-bold text-white mb-2">Get Proxy Hedge Recommendations</h3>
+        <p class="text-slate-400 text-sm leading-relaxed">The Material Correlation Engine (MCE) calculates Pearson correlations between your materials and publicly-traded commodity ETFs, then recommends the most mathematically efficient hedge instrument with a dollar amount.</p>
+      </div>
+
+      <div class="feature-card p-6">
+        <div class="w-10 h-10 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center mb-5">
+          <svg class="w-5 h-5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div class="text-[10px] font-mono text-violet-400 uppercase tracking-widest mb-2">Step 3</div>
+        <h3 class="text-base font-bold text-white mb-2">Layer in Global Intelligence</h3>
+        <p class="text-slate-400 text-sm leading-relaxed">Run geopolitical conflict simulations and watch ClusterHedge map the real financial impact directly onto your active bills of materials — giving you a precise, actionable cost impact before the market does.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO PREVIEW CARD -->
+<section class="py-8 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="rounded-xl border border-slate-700 overflow-hidden" style="background: #151e2f;">
+      <div class="flex items-center px-4 py-3 border-b border-slate-700 gap-2">
+        <span class="w-3 h-3 rounded-full bg-red-500/70"></span>
+        <span class="w-3 h-3 rounded-full bg-yellow-500/70"></span>
+        <span class="w-3 h-3 rounded-full bg-emerald-500/70"></span>
+        <span class="ml-3 text-[10px] font-mono text-slate-500">clusterhedge — Bill of Materials / Copper Workshop</span>
+      </div>
+      <div class="p-6">
+        <div class="grid md:grid-cols-2 gap-6">
+          <!-- BOM table -->
+          <div>
+            <div class="text-[9px] uppercase tracking-widest text-slate-500 font-mono mb-3">Materials · 3 Items</div>
+            <table class="w-full bom-table">
+              <thead><tr><th>Material</th><th>Qty</th><th>Exposure</th></tr></thead>
+              <tbody>
+                <tr><td>Copper Wire (12 AWG)</td><td>50m</td><td class="text-white font-mono">$480</td></tr>
+                <tr><td>Steel Pipe (1.5")</td><td>10ft</td><td class="text-white font-mono">$120</td></tr>
+                <tr><td>Lumber (2×4)</td><td>20pcs</td><td class="text-white font-mono">$200</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Hedge rec -->
+          <div>
+            <div class="text-[9px] uppercase tracking-widest text-slate-500 font-mono mb-3">Hedge Recommendations · MCE</div>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center bg-slate-900 border border-slate-800 rounded p-2.5">
+                <div>
+                  <div class="text-[10px] font-bold text-sky-400 font-mono">CPER</div>
+                  <div class="text-[10px] text-slate-500">Copper Proxy · 94% Corr.</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-sm font-bold text-white font-mono">$451</div>
+                  <div class="text-[9px] text-emerald-400">Hedge Amount</div>
+                </div>
+              </div>
+              <div class="flex justify-between items-center bg-slate-900 border border-slate-800 rounded p-2.5">
+                <div>
+                  <div class="text-[10px] font-bold text-sky-400 font-mono">SLX</div>
+                  <div class="text-[10px] text-slate-500">Steel Proxy · 81% Corr.</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-sm font-bold text-white font-mono">$97</div>
+                  <div class="text-[9px] text-emerald-400">Hedge Amount</div>
+                </div>
+              </div>
+              <div class="flex justify-between items-center bg-slate-900 border border-slate-800 rounded p-2.5">
+                <div>
+                  <div class="text-[10px] font-bold text-sky-400 font-mono">WOOD</div>
+                  <div class="text-[10px] text-slate-500">Lumber Proxy · 76% Corr.</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-sm font-bold text-white font-mono">$152</div>
+                  <div class="text-[9px] text-emerald-400">Hedge Amount</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS GRID -->
+<section id="tools" class="py-24 px-6">
+  <div class="max-w-5xl mx-auto">
+    <div class="section-label mb-4 text-center">The Engine Room</div>
+    <h2 class="text-3xl font-bold text-white text-center mb-4 tracking-tight">Four Layers of Intelligence</h2>
+    <p class="text-slate-400 text-center max-w-xl mx-auto mb-14 leading-relaxed">From real-time financial correlations to Monte Carlo war simulations — each layer adds a new dimension of insight to your supply chain.</p>
+
+    <div class="grid md:grid-cols-2 gap-5">
+      <a href="/dashboard" class="feature-card p-7 group block">
+        <div class="flex items-start justify-between mb-5">
+          <div class="text-[10px] font-mono text-sky-400 uppercase tracking-wider">Layer 01</div>
+          <svg class="w-4 h-4 text-slate-600 group-hover:text-sky-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </div>
+        <h3 class="text-white font-bold text-base mb-2">Material Correlation Engine</h3>
+        <p class="text-slate-400 text-sm leading-relaxed mb-4">Uses live yfinance data and Pearson correlation to identify which ETFs best proxy your raw materials, then calculates the optimal hedge size adjusted by subjective Black-Litterman market views.</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-[9px] font-mono bg-slate-900 border border-slate-700 text-slate-400 px-2 py-1 rounded">yfinance</span>
+          <span class="text-[9px] font-mono bg-slate-900 border border-slate-700 text-slate-400 px-2 py-1 rounded">Pearson Corr.</span>
+          <span class="text-[9px] font-mono bg-slate-900 border border-slate-700 text-slate-400 px-2 py-1 rounded">Black-Litterman</span>
+        </div>
+      </a>
+
+      <a href="/dashboard" class="feature-card p-7 group block">
+        <div class="flex items-start justify-between mb-5">
+          <div class="text-[10px] font-mono text-emerald-400 uppercase tracking-wider">Layer 02</div>
+          <svg class="w-4 h-4 text-slate-600 group-hover:text-emerald-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </div>
+        <h3 class="text-white font-bold text-base mb-2">Monte Carlo Risk Engine</h3>
+        <p class="text-slate-400 text-sm leading-relaxed mb-4">Runs 1,000-pass Monte Carlo simulations on your BOM to generate a 95% Value-at-Risk (VaR) figure. Quantifies "how bad can this get?" with formal statistical confidence intervals.</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-[9px] font-mono bg-slate-900 border border-slate-700 text-slate-400 px-2 py-1 rounded">NumPy</span>
+          <span class="text-[9px] font-mono bg-slate-900 border border-slate-700 text-slate-400 px-2 py-1 rounded">Monte Carlo</span>
+          <span class="text-[9px] font-mono bg-slate-900 border border-slate-700 text-slate-400 px-2 py-1 rounded">95% VaR</span>
+        </div>
+      </a>
+
+      <a href="/dashboard" class="feature-card p-7 group block">
+        <div class="flex items-start justify-between mb-5">
+          <div class="text-[10px] font-mono text-violet-400 uppercase tracking-wider">Layer 03</div>
+          <svg class="w-4 h-4 text-slate-600 group-hover:text-violet-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </div>
+        <h3 class="text-white font-bold text-base mb-2">Spatial Agglomeration Alpha</h3>
+        <p class="text-slate-400 text-sm leading-relaxed mb-4">Uses live GIS data (Overpass API) to calculate the density of similar economic activity within your business's radius — generating an "agglomeration score" that translates to a local pricing premium you can justifiably charge.</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-[9px] font-mono bg-slate-900 border border-slate-700 text-slate-400 px-2 py-1 rounded">Overpass API</span>
+          <span class="text-[9px] font-mono bg-slate-900 border border-slate-700 text-slate-400 px-2 py-1 rounded">GIS</span>
+          <span class="text-[9px] font-mono bg-slate-900 border border-slate-700 text-slate-400 px-2 py-1 rounded">Pricing Power</span>
+        </div>
+      </a>
+
+      <a href="/geopolitical" class="feature-card p-7 group block">
+        <div class="flex items-start justify-between mb-5">
+          <div class="text-[10px] font-mono text-red-400 uppercase tracking-wider">Layer 04</div>
+          <svg class="w-4 h-4 text-slate-600 group-hover:text-red-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        </div>
+        <h3 class="text-white font-bold text-base mb-2">Geopolitical Radar</h3>
+        <p class="text-slate-400 text-sm leading-relaxed mb-4">Simulate conflicts between any two nations and watch the engine compute cascading supply chain shocks, alliance activations, and secondary inflationary contagion — directly mapped to your active BOMs within 4 hours of market reaction.</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="text-[9px] font-mono bg-slate-900 border border-slate-700 text-slate-400 px-2 py-1 rounded">Stochastic MC</span>
+          <span class="text-[9px] font-mono bg-slate-900 border border-slate-700 text-slate-400 px-2 py-1 rounded">Alliance Graph</span>
+          <span class="text-[9px] font-mono bg-slate-900 border border-slate-700 text-slate-400 px-2 py-1 rounded">Cascade Shocks</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- INTELLIGENCE SECTION -->
+<section id="intelligence" class="py-16 px-6" style="background: linear-gradient(180deg, #0f172a 0%, #0d1525 100%);">
+  <div class="max-w-5xl mx-auto">
+    <div class="rounded-xl border border-red-500/20 overflow-hidden" style="background: linear-gradient(135deg, #1a0f0f 0%, #151e2f 100%);">
+      <div class="px-8 py-6 border-b border-red-900/30 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <span class="w-2 h-2 rounded-full bg-red-400 live-dot"></span>
+          <span class="text-[10px] font-mono text-red-400 uppercase tracking-widest font-bold">Geopolitical Radar — Live Sample</span>
+        </div>
+        <span class="text-[9px] font-mono text-slate-600 uppercase">Simulation Output</span>
+      </div>
+      <div class="p-8 grid md:grid-cols-2 gap-8">
+        <div>
+          <div class="text-xs font-mono text-slate-500 mb-4 uppercase tracking-wider">Conflict Scenario</div>
+          <div class="flex items-center space-x-4 mb-6">
+            <div class="text-xl font-bold uppercase text-white tracking-tight">IRAN</div>
+            <div class="text-slate-600 font-mono text-sm">VS</div>
+            <div class="text-xl font-bold uppercase text-white tracking-tight">USA</div>
+          </div>
+          <div class="space-y-2">
+            <div class="text-[10px] text-slate-500 font-mono uppercase mb-2">Affected Routes</div>
+            <div class="bg-slate-900/50 border-l-2 border-red-500 px-3 py-2 rounded-sm">
+              <div class="text-xs font-bold text-slate-200">Strait of Hormuz</div>
+              <div class="text-[10px] text-red-400 mt-0.5 font-mono">DIRECT BLOCKADE RISK · Closure Prob: 35%</div>
+            </div>
+            <div class="bg-slate-900/50 border-l-2 border-red-500 px-3 py-2 rounded-sm">
+              <div class="text-xs font-bold text-slate-200">Suez Canal & Red Sea</div>
+              <div class="text-[10px] text-red-400 mt-0.5 font-mono">ALLIANCE IMPACT</div>
+            </div>
+            <div class="bg-slate-900/50 border-l-2 border-yellow-600 px-3 py-2 rounded-sm">
+              <div class="text-xs font-bold text-slate-200">Indian Subcontinent</div>
+              <div class="text-[10px] text-yellow-500 mt-0.5 font-mono">CASCADING SPILLOVER</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="text-xs font-mono text-slate-500 mb-4 uppercase tracking-wider">Commodity Shock Forecast (Monte Carlo · 1,000 iter)</div>
+          <div class="space-y-2.5">
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-slate-400">Crude Oil</span>
+              <div class="text-right">
+                <span class="text-sm font-bold text-red-400 font-mono">+15.0% Exp</span>
+                <span class="text-[9px] text-slate-600 font-mono ml-2">+25.0% Max (95% CI)</span>
+              </div>
+            </div>
+            <div class="h-px bg-slate-800"></div>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-slate-400">Fertilizer</span>
+              <div class="text-right">
+                <span class="text-sm font-bold text-red-400 font-mono">+24.0% Exp</span>
+                <span class="text-[9px] text-slate-600 font-mono ml-2">+27.0% Max (95% CI)</span>
+              </div>
+            </div>
+            <div class="h-px bg-slate-800"></div>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-slate-400">LPG</span>
+              <div class="text-right">
+                <span class="text-sm font-bold text-red-400 font-mono">+12.1% Exp</span>
+                <span class="text-[9px] text-slate-600 font-mono ml-2">+16.2% Max (95% CI)</span>
+              </div>
+            </div>
+            <div class="h-px bg-slate-800"></div>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-slate-400">Wheat (incl. substitution)</span>
+              <div class="text-right">
+                <span class="text-sm font-bold text-orange-400 font-mono">+17.3% Exp</span>
+                <span class="text-[9px] text-slate-600 font-mono ml-2">+20.0% Max (95% CI)</span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-5 p-3 rounded-md border border-red-500/30" style="background: rgba(127,29,29,0.15);">
+            <p class="text-[10px] text-red-200 font-mono leading-relaxed">
+              <span class="font-bold text-red-400">FLASH WARNING:</span> Markets price these disruptions within <span class="font-bold text-white underline">4 hours</span>. Execute hedges immediately.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="py-28 px-6 text-center">
+  <div class="max-w-2xl mx-auto">
+    <div class="section-label mb-6">Free & Open Source</div>
+    <h2 class="text-4xl font-bold text-white tracking-tight mb-5" style="letter-spacing: -0.02em;">
+      Start Hedging<br>Like an Institution
+    </h2>
+    <p class="text-slate-400 mb-10 leading-relaxed">
+      No Bloomberg terminal required. No finance degree needed. Just enter your materials and let the quantitative engine do the rest.
+    </p>
+    <a href="/dashboard" class="cta-btn">Launch the Dashboard →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="border-t border-slate-800 py-8 px-6">
+  <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="flex items-center space-x-2 text-slate-500 text-sm">
+      <span class="w-1.5 h-1.5 bg-sky-400 rounded-full"></span>
+      <span class="font-medium text-slate-400">ClusterHedge</span>
+      <span>·</span>
+      <span>Open Source Quantitative Platform</span>
+    </div>
+    <div class="flex items-center space-x-6 text-xs text-slate-600 font-mono">
+      <span>Python · Flask · NumPy · yfinance</span>
+      <span>·</span>
+      <span>v1.0.0-alpha</span>
+    </div>
+  </div>
+</footer>
+
+</div>
+{% endblock %}
