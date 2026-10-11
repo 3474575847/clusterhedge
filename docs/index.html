@@ -96,11 +96,11 @@
         </article>
         <article class="card">
           <h3>Supply-chain scenarios</h3>
-          <p>Inspect modeled geopolitical scenarios, affected trade routes, and illustrative commodity price shocks.</p>
+          <p>Inspect source-labeled trade shares, modeled route exposure, commodity shock intervals, and bill-of-materials impacts.</p>
         </article>
         <article class="card">
-          <h3>Research prototype</h3>
-          <p>Review the Python source, knowledge-base data, and tests; adapt the project for experimentation and learning.</p>
+          <h3>Bundled public data</h3>
+          <p>Dated FAOSTAT export snapshots and FRED benchmark-price history are bundled for offline geopolitical simulations.</p>
         </article>
       </div>
     </section>
@@ -119,6 +119,15 @@ cp .env.example .env
 python app.py</code></pre>
       <p>Then open <a href="http://127.0.0.1:5011">http://127.0.0.1:5011</a>. On Windows, use <code>.venv\Scripts\activate</code> and copy <code>.env.example</code> to <code>.env</code> using File Explorer or PowerShell.</p>
       <p><a href="./local-setup.md" download>Download the full local setup guide</a> · <a href="https://github.com/3474575847/clusterhedge/blob/main/README.md">Read the README</a></p>
+    </section>
+
+    <section>
+      <h2>Data and model transparency</h2>
+      <div class="card">
+        <p>The geopolitical model uses dated FAOSTAT wheat, corn, and rice export-value shares and FRED benchmark-price snapshots where available. At runtime these snapshots are read locally; they are not fetched on every simulation.</p>
+        <p>Where FRED observations are available, annualized volatility is estimated from recent benchmark returns. Eligible commodity shocks are sampled jointly using configured correlation groups, then reported with a modeled 95% interval. Alternative-exporter substitution and strategic-reserve damping are also modeled.</p>
+        <p class="muted">This is mixed-source experimental analysis, not a verified real-time supply-chain forecast. Correlations, elasticities, reserve coverage, route capacities, some exporter shares, and event comparisons include illustrative assumptions. Snapshot coverage is limited, and benchmark data are not local transaction prices. Review source notes and limits in the <a href="https://github.com/3474575847/clusterhedge#geopolitical-source-snapshots">README</a> and <a href="https://github.com/3474575847/clusterhedge/blob/main/docs/local-setup.md">local guide</a>.</p>
+      </div>
     </section>
 
     <section>

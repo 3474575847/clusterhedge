@@ -65,11 +65,41 @@ python app.py
 Open <http://127.0.0.1:5011> in your browser. Stop the local server with
 `Ctrl+C`.
 
+The app starts with an empty local database. To add the optional Seattle sample
+project and materials, run `python seed.py` once from the project directory.
+The script does not run automatically, and each additional run inserts another
+copy of the sample records.
+
 ## Run tests
 
 ```bash
 python -m unittest discover -s tests
 ```
+
+## Refresh bundled geopolitical data (optional)
+
+The repository includes dated FAOSTAT export snapshots and FRED benchmark-price
+history. The geopolitical simulation reads these files locally and does not
+download them on every run. If you intentionally want to refresh the bundled
+data, use the system `curl` utility and run:
+
+```bash
+python scripts/refresh_geopolitical_sources.py --year 2024
+```
+
+This fetches FRED price series and the large FAOSTAT bulk archive; no API key is
+currently required. Use `--prices-only` or `--exports-only` to refresh just one
+snapshot. To reuse a previously downloaded FAOSTAT archive, add
+`--faostat-archive PATH`. Review the generated metadata and resulting diffs
+before sharing refreshed snapshots.
+
+The simulation uses FAOSTAT country export-value shares for wheat, corn, and
+rice where available. It estimates annualized volatility from recent FRED
+benchmark returns where available; other values remain explicitly labeled
+illustrative assumptions. Correlation groups, commodity elasticities,
+substitution, reserve coverage, route capacities, and relationship data are
+not comprehensively verified current market data. Shock intervals are based on
+1,000 correlated lognormal samples, not guarantees or forecasts.
 
 ## Data and safety
 

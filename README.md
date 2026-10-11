@@ -8,7 +8,8 @@ ClusterHedge is an experimental Flask application for exploring material cost
 exposure, proxy-ETF relationships, scenario analysis, and supply-chain risks.
 It includes project/material tracking, Monte Carlo simulations, hedge
 recommendations, backtesting, sustainability estimates, and a geopolitical
-scenario view.
+scenario view with route exposure, commodity shocks, and bill-of-materials
+impact estimates.
 
 This is a research/learning prototype, not production-ready financial software.
 Its estimates can be incomplete or wrong and are not investment, trading,
@@ -18,16 +19,17 @@ enter confidential or sensitive information.
 ## Status and important limitations
 
 - The app has no user accounts, authentication, or per-user access controls.
-  Anyone who can reach a deployed instance can potentially view or change its
-  projects. Do not expose an instance containing non-public data to the
-  internet.
-- Local development uses SQLite. Serverless filesystems may be temporary, so
-  local SQLite is not durable storage for a serverless deployment.
+  Keep it local and do not expose an instance containing non-public data to
+  the internet.
+- Local development uses SQLite. The database file is created on your machine
+  and is not included in the source download.
 - Some features request market history through `yfinance`/Yahoo Finance and
   geographic data from the OpenStreetMap Overpass API. Results, availability,
-  and terms are controlled by those third parties.
+  and terms are controlled by those third parties. These features do not
+  currently require you to provide API keys.
 - The UI loads Tailwind CSS, vis-network, and fonts from external CDNs.
-- This repository does not include a production deployment configuration.
+- The Flask app is intended to run locally; the GitHub Pages site is static
+  project documentation and does not host the app.
 
 ## Download and run locally
 
@@ -51,9 +53,13 @@ python app.py
 Open <http://127.0.0.1:5011>. On Windows, activate the environment with
 `.venv\Scripts\activate` instead of the `source` command.
 
-The generated `.env` is for local development only. Set a private `SECRET_KEY`
-in the environment of any deployment. Never commit `.env` files, database
-files, or credentials.
+The copied `.env` contains a placeholder for local development. Never commit
+`.env` files, database files, or credentials.
+
+The app creates an empty local database by default. To add the optional sample
+Seattle project and materials, run `python seed.py` once from the project
+directory. The seed script is not run automatically; running it more than once
+creates duplicate sample projects.
 
 ## Tests
 
@@ -88,17 +94,24 @@ snapshots. UN Comtrade, USGS, UNCTAD, licensed Drewry/Lloyd's List datasets, and
 historical COW/ATOP alliance datasets are not silently represented as current
 verified data.
 
-## Deployment
+The simulation combines eligible exporter shares, severity, and illustrative
+commodity elasticities into expected shocks. Where available, annualized
+volatility is estimated from the latest 30 returns in the bundled FRED
+snapshot; otherwise the model uses a labeled knowledge-base assumption.
+Configured correlation groups are illustrative assumptions, not measured
+current correlations. The model samples 1,000 correlated lognormal scenarios
+to report a central 95% interval. Alternative-exporter substitution and
+strategic-reserve damping are model assumptions and are shown with their source
+notes in the results. Results are deterministic for the same scenario inputs
+and bundled data.
 
-Vercel currently documents support for Flask, but this app is not ready to be
-deployed publicly as-is: it has no authentication, runs schema checks during
-requests, and defaults to local SQLite. Before deploying for real use, add
-access controls, choose persistent storage, review third-party data handling,
-and test the full dependency bundle and request duration on the selected host.
-See the official [Vercel Flask guide](https://vercel.com/docs/frameworks/backend/flask)
-and [function limits](https://vercel.com/docs/functions/limitations). A free
-plan is subject to the provider's current eligibility, usage limits, and terms;
-check those directly before deploying.
+## Documentation site
+
+The public [GitHub Pages site](https://3474575847.github.io/clusterhedge/)
+provides project documentation and local setup instructions only. It does not
+run or host the Flask application. The current app has no authentication or
+per-user access controls and is intended for local evaluation, not as a
+publicly hosted service.
 
 ## Project and legal notices
 
