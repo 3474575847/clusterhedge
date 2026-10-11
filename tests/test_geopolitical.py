@@ -135,6 +135,30 @@ class GeopoliticalSimulationTests(unittest.TestCase):
         for commodity in graph_commodities:
             self.assertTrue(any(edge["to"] == f"commodity:{commodity}" for edge in results["graph_data"]["edges"]))
 
+    def test_graph_has_hierarchical_layers_and_distinct_partner_colors(self):
+        graph = self.simulate()["graph_data"]
+        nodes = {node["id"]: node for node in graph["nodes"]}
+        self.assertEqual(nodes["country:ukraine"]["level"], 0)
+        self.assertEqual(nodes["chokepoint:black_sea"]["level"], 2)
+        self.assertEqual(nodes["commodity:wheat"]["level"], 3)
+        self.assertNotEqual(
+            nodes["country:belarus"]["color"],
+            nodes["country:china"]["color"],
+        )
+
+    def test_graph_hides_chokepoints_without_commodity_edges(self):
+        graph = self.simulate()["graph_data"]
+        commodities = {
+            edge["from"] for edge in graph["edges"]
+            if edge["from"].startswith("chokepoint:")
+            and edge["to"].startswith("commodity:")
+        }
+        chokepoint_nodes = {
+            node["id"] for node in graph["nodes"]
+            if node["type"] == "chokepoint"
+        }
+        self.assertEqual(chokepoint_nodes, commodities)
+
     def test_ci_is_a_range_not_a_scalar(self):
         shocks = self.simulate()["price_shocks"]
         for shock in shocks.values():

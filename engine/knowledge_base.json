@@ -1,7 +1,7 @@
 {
   "metadata": {
     "version": 1,
-    "data_note": "Mixed-source educational prototype. Dated FAOSTAT crop-trade and FRED benchmark-price snapshots are used where available; remaining export shares, elasticities, route assignments, route trade values, route capacities, relations, and BOM costs are illustrative assumptions. Commodity-specific route assignments may span origin basins and do not quantify actual shipment shares. See each simulation result for applied data provenance.",
+    "data_note": "Mixed-source educational prototype. Dated FAOSTAT crop-trade and FRED benchmark-price snapshots are used where available; remaining export shares, elasticities, route assignments, route trade values, route capacities, relationships, correlation coefficients, substitution elasticities, reserve coverage, and BOM costs are illustrative assumptions unless a result explicitly identifies a dated source. Commodity-specific route assignments may span origin basins and do not quantify actual shipment shares.",
     "sources": [
       "FAOSTAT Trade: Crops and livestock products normalized dataset (dated wheat, corn, and rice export-value shares in engine/data_snapshots/faostat_exports.json)",
       "Federal Reserve Bank of St. Louis FRED graph CSV (dated wheat, corn, rice, Brent crude, and copper benchmark prices in engine/data_snapshots/fred_prices.csv)",
@@ -193,9 +193,45 @@
     "lpg": {"name": "LPG", "elasticity": 0.9, "annual_volatility": 0.30, "pricing_horizon_hours": 48, "chokepoints": ["baltic_sea", "black_sea", "strait_of_hormuz", "suez_canal", "strait_of_malacca", "taiwan_strait"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; LPG is a heterogeneous market."},
     "steel": {"name": "Steel", "elasticity": 0.5, "annual_volatility": 0.22, "pricing_horizon_hours": 72, "chokepoints": ["black_sea", "baltic_sea", "taiwan_strait", "south_china_sea", "indus_arabian_sea"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; steel products are aggregated."},
     "lumber": {"name": "Lumber", "elasticity": 0.4, "annual_volatility": 0.38, "pricing_horizon_hours": 72, "chokepoints": ["baltic_sea", "suez_canal", "south_china_sea"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; validate against lumber futures and World Bank timber series."},
-    "rice": {"name": "Rice", "elasticity": 0.75, "annual_volatility": 0.20, "pricing_horizon_hours": 48, "chokepoints": ["indus_arabian_sea", "strait_of_malacca", "south_china_sea"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; validate against FAOSTAT and World Bank rice prices."},
+    "rice": {"name": "Rice", "elasticity": 0.75, "annual_volatility": 0.20, "pricing_horizon_hours": 48, "chokepoints": ["indus_arabian_sea", "strait_of_malacca", "south_china_sea"], "substitutes": ["wheat", "corn"], "alternative_exporters": ["thailand", "vietnam"], "substitution_elasticity": 0.3, "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; validate against FAOSTAT and World Bank rice prices."},
     "copper": {"name": "Copper", "elasticity": 0.6, "annual_volatility": 0.24, "pricing_horizon_hours": 48, "chokepoints": ["strait_of_malacca", "south_china_sea", "panama_canal", "taiwan_strait"], "source_note": "Illustrative elasticity, annualized price volatility, and pricing horizon; validate against World Bank copper series."},
     "transport": {"name": "Transport", "elasticity": 0.35, "annual_volatility": 0.18, "pricing_horizon_hours": 72, "export_share_proxy": "crude_oil", "chokepoints": ["baltic_sea", "black_sea", "suez_canal", "strait_of_hormuz", "strait_of_malacca", "panama_canal"], "source_note": "Transport is an oil-linked cost proxy using crude-oil exporting shares; pricing horizon, volatility, and elasticity are illustrative. It is not a separately measured global export market."}
+  },
+  "correlation_groups": {
+    "grains": {
+      "commodities": ["wheat", "corn"],
+      "correlation_matrix": [[1.0, 0.72], [0.72, 1.0]],
+      "source_note": "Illustrative co-movement assumption; calibrate from dated price returns before operational use."
+    },
+    "energy": {
+      "commodities": ["crude_oil", "lpg", "transport"],
+      "correlation_matrix": [[1.0, 0.8, 0.75], [0.8, 1.0, 0.65], [0.75, 0.65, 1.0]],
+      "source_note": "Illustrative co-movement assumption; transport is an oil-linked proxy."
+    },
+    "construction": {
+      "commodities": ["steel", "lumber"],
+      "correlation_matrix": [[1.0, 0.5], [0.5, 1.0]],
+      "source_note": "Illustrative co-movement assumption; calibrate from dated price returns before operational use."
+    }
+  },
+  "strategic_reserves": {
+    "united_states": {
+      "crude_oil": {
+        "days_of_cover": 40,
+        "source_note": "Approximate SPR cover stated in the user-provided requirements; not independently verified in this snapshot."
+      }
+    }
+  },
+  "policy_responses": {
+    "export_bans_history": [
+      {"country": "india", "commodity": "wheat", "year": 2022, "source_note": "User-provided event list; historical policy event not independently verified here."},
+      {"country": "indonesia", "commodity": "palm_oil", "year": 2022, "source_note": "User-provided event list; historical policy event not independently verified here."},
+      {"country": "russia", "commodity": "fertilizer", "year": 2022, "source_note": "User-provided event list; historical policy event not independently verified here."}
+    ],
+    "price_caps": [
+      {"commodity": "crude_oil", "country": "russia", "price_usd_per_barrel": 60, "start_date": "2022-12-05", "source_note": "User-provided policy example; implementation and current status require source verification."}
+    ],
+    "iea_releases": []
   },
   "chokepoints": {
     "black_sea": {"name": "Black Sea", "latitude": 43.5, "longitude": 34.0, "bordering_countries": ["ukraine", "russia", "turkey", "romania", "bulgaria", "georgia"], "commodities": ["wheat", "corn", "fertilizer", "crude_oil", "lpg", "steel"], "origin_basins": ["black_sea", "eastern_europe"], "annual_trade_value_usd": 600000000000, "alternative_route_capacity": 0.35},

@@ -1,6 +1,7 @@
 """Load reproducible source snapshots without network access at app runtime."""
 
 import csv
+from functools import lru_cache
 import json
 import math
 from pathlib import Path
@@ -11,12 +12,19 @@ EXPORT_SNAPSHOT_PATH = SNAPSHOT_DIR / "faostat_exports.json"
 PRICE_SNAPSHOT_PATH = SNAPSHOT_DIR / "fred_prices.csv"
 
 
-def load_export_record(country_id, commodity_id):
-    """Return a source-backed FAOSTAT export record when the snapshot has one."""
+@lru_cache(maxsize=1)
+def _load_export_snapshot():
     if not EXPORT_SNAPSHOT_PATH.exists():
         return None
     with EXPORT_SNAPSHOT_PATH.open(encoding="utf-8") as snapshot_file:
-        snapshot = json.load(snapshot_file)
+        return json.load(snapshot_file)
+
+
+def load_export_record(country_id, commodity_id):
+    """Return a source-backed FAOSTAT export record when the snapshot has one."""
+    snapshot = _load_export_snapshot()
+    if snapshot is None:
+        return None
     return (
         snapshot.get("commodities", {})
         .get(commodity_id, {})
@@ -27,10 +35,8 @@ def load_export_record(country_id, commodity_id):
 
 def load_export_snapshot_metadata():
     """Return the provenance for the dated FAOSTAT export snapshot, if present."""
-    if not EXPORT_SNAPSHOT_PATH.exists():
-        return None
-    with EXPORT_SNAPSHOT_PATH.open(encoding="utf-8") as snapshot_file:
-        return json.load(snapshot_file).get("metadata")
+    snapshot = _load_export_snapshot()
+    return snapshot.get("metadata") if snapshot else None
 
 
 def get_export_share_pct(country_id, commodity_id, knowledge_base):
@@ -52,6 +58,7 @@ def get_export_share_pct(country_id, commodity_id, knowledge_base):
     )
 
 
+@lru_cache(maxsize=None)
 def calculate_realized_volatility(commodity_id):
     """Calculate annualized realized volatility from the latest 30 source returns."""
     if not PRICE_SNAPSHOT_PATH.exists():

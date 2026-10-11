@@ -1,6 +1,5 @@
 """Build vis-network data from the already-computed simulation result."""
 
-import hashlib
 import logging
 
 
@@ -8,11 +7,20 @@ logger = logging.getLogger(__name__)
 
 ROLE_COLORS = {
     "conflict_country": "#ef4444",
-    "ally_country": "#f97316",
-    "partner_country": "#f97316",
+    "ally_country": "#c2410c",
+    "partner_country": "#fb923c",
     "adversary_country": "#64748b",
     "chokepoint": "#fbbf24",
     "commodity": "#38bdf8",
+}
+
+ROLE_LEVELS = {
+    "conflict_country": 0,
+    "ally_country": 1,
+    "partner_country": 1,
+    "adversary_country": 1,
+    "chokepoint": 2,
+    "commodity": 3,
 }
 
 
@@ -34,6 +42,7 @@ def build_graph_data(results, knowledge_base):
             "type": role,
             "risk_score": round(risk_score, 1),
             "color": ROLE_COLORS[role],
+            "level": ROLE_LEVELS[role],
             "shape": "dot",
         })
 
@@ -56,10 +65,8 @@ def build_graph_data(results, knowledge_base):
         tooltip = f"Conflict country: {country['name']}. Export-risk score: {score:.1f}."
         add_node(f"country:{country_id}", country["name"], "conflict_country", score, tooltip)
 
-    relation_types = {}
     for escalation in results["escalation_chain"]:
         target = escalation["to"]
-        relation_types[target] = escalation["relation"]
         country = knowledge_base["countries"].get(target, {"name": target.title()})
         source_name = knowledge_base["countries"].get(escalation["from"], {}).get("name", escalation["from"])
         relation_role = f"{escalation['relation']}_country"
@@ -79,7 +86,10 @@ def build_graph_data(results, knowledge_base):
             default=0.0,
         )
         score = min(third_party_risk * 100, max(primary_risk - 0.1, 0.0))
-        tooltip = f"{escalation['relation'].title()} escalation from {source_name}: {escalation['reason']}"
+        tooltip = (
+            f"Risk score: {score:.1f}. {escalation['relation'].title()} "
+            f"escalation from {source_name}: {escalation['reason']}"
+        )
         add_node(f"country:{target}", country["name"], relation_role, score, tooltip)
         add_edge(
             f"country:{escalation['from']}",
@@ -89,8 +99,12 @@ def build_graph_data(results, knowledge_base):
         )
 
     for route in results["affected_routes"]:
+        downstream_commodities = set(route["commodities"]) & set(shock_by_id)
+        if not downstream_commodities:
+            continue
         route_id = f"chokepoint:{route['id']}"
         tooltip = (
+            f"Risk score: {route['magnitude'] * 100:.1f}. "
             f"{route['impact_type']} impact. Magnitude: {route['magnitude'] * 100:.1f}%. "
             f"Reason: {route['reasoning']}"
         )
@@ -103,7 +117,7 @@ def build_graph_data(results, knowledge_base):
             add_edge(
                 f"country:{country}",
                 route_id,
-                route["impact_type"],
+                f"{route['impact_type']} · {route['magnitude'] * 100:.1f}%",
                 route["magnitude"],
             )
 
@@ -116,7 +130,7 @@ def build_graph_data(results, knowledge_base):
             for country, share in shock["exporters"].items()
         )
         tooltip = (
-            f"Expected: +{risk:.1f}%. 95% CI: {ci}. "
+            f"Risk score: {risk:.1f}. Expected: +{risk:.1f}%. 95% CI: {ci}. "
             f"Export shares: {exporters}. "
             f"Export data: {shock['export_data_source']}; "
             f"volatility data: {shock['volatility_source']}"
@@ -139,6 +153,14 @@ def build_graph_data(results, knowledge_base):
                 country_node = f"country:{country_id}"
                 if country_node in node_ids:
                     add_edge(country_node, commodity_node, f"exports: {share:.1f}%", share / 100)
+
+    edge_labels = {}
+    for edge in edges:
+        edge_labels.setdefault(edge["to"], []).append(edge["label"])
+    for node in nodes:
+        incoming = edge_labels.get(node["id"], [])
+        if incoming:
+            node["title"] += f"\nIncoming edges: {', '.join(incoming)}"
 
     repeated_risks = {}
     for node in nodes:

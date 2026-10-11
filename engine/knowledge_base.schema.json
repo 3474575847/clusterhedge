@@ -38,6 +38,27 @@
           "elasticity": {"type": "number", "minimum": 0},
           "annual_volatility": {"type": "number", "exclusiveMinimum": 0},
           "chokepoints": {"type": "array", "items": {"type": "string"}},
+          "substitutes": {"type": "array", "items": {"type": "string"}},
+          "alternative_exporters": {"type": "array", "items": {"type": "string"}},
+          "substitution_elasticity": {"type": "number", "minimum": 0, "maximum": 1},
+          "source_note": {"type": "string"}
+        }
+      }
+    },
+    "correlation_groups": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["commodities", "correlation_matrix"],
+        "properties": {
+          "commodities": {"type": "array", "items": {"type": "string"}},
+          "correlation_matrix": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {"type": "number", "minimum": -1, "maximum": 1}
+            }
+          },
           "source_note": {"type": "string"}
         }
       }

@@ -85,6 +85,15 @@
                     <div class="text-xl font-bold uppercase text-white">{{ results.country_b }}</div>
                 </div>
 
+                {% if results.coverage_warnings %}
+                <div class="mb-6 rounded border border-amber-700/50 bg-amber-900/10 p-4">
+                    <h4 class="text-[10px] uppercase tracking-widest text-amber-300 mb-2">Country data coverage limitation</h4>
+                    {% for warning in results.coverage_warnings %}
+                    <p class="text-[11px] text-slate-300">{{ warning }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
                 {% if results.escalation_chain %}
                 <div class="mb-6 rounded border border-orange-700/50 bg-orange-900/10 p-4">
                     <h4 class="text-[10px] uppercase tracking-widest text-orange-300 mb-3">Potential escalation chain</h4>
@@ -133,6 +142,12 @@
                             <span class="block text-[10px] text-slate-400 font-mono mt-1">95% CI: +{{ (shock_data.ci_low * 100)|round(1) }}% to +{{ (shock_data.ci_high * 100)|round(1) }}%</span>
                             <span class="block text-[9px] text-slate-600 mt-1">Export share: {{ shock_data.export_share_pct|round(1) }}% · elasticity: {{ shock_data.elasticity }}</span>
                             <span class="block text-[9px] text-slate-500 mt-1">Exports: {{ shock_data.export_data_source }}{% if shock_data.export_data_year %} ({{ shock_data.export_data_year }}){% endif %} · volatility: {{ shock_data.volatility_source }}</span>
+                            {% if shock_data.reserve_days %}
+                            <span class="block text-[9px] text-slate-500 mt-1">Strategic reserve assumption: {{ shock_data.reserve_days }} days · shock multiplier {{ shock_data.reserve_damping|round(2) }} · {{ shock_data.reserve_source_note }}</span>
+                            {% endif %}
+                            {% if shock_data.substitution_relief_pct %}
+                            <span class="block text-[9px] text-slate-500 mt-1">Substitution relief: {{ shock_data.substitution_relief_pct|round(2) }}% from {{ shock_data.alternative_exporters|tojson }} ({{ shock_data.alternative_exporter_sources|tojson }})</span>
+                            {% endif %}
                         </div>
                         {% endfor %}
                     </div>
@@ -228,9 +243,10 @@
         <span>Node: <b class="text-red-400">Conflict country</b> / <b class="text-orange-400">Ally or partner</b> / <b class="text-slate-400">Adversary</b> / <b class="text-amber-400">Chokepoint</b> / <b class="text-sky-400">Commodity</b></span>
     </div>
     <div class="relative">
-        <div class="absolute right-3 top-3 z-10 rounded border border-slate-600 bg-slate-950/95 px-3 py-2 text-[9px] leading-5 text-slate-200 shadow-lg">
+        <div class="absolute right-3 top-3 z-10 rounded border border-slate-600 bg-slate-950/95 px-3 py-2 text-[9px] leading-5 text-slate-200 shadow-lg" style="--conflict:#ef4444;--ally:#c2410c;--partner:#fb923c;--chokepoint:#fbbf24;--commodity:#38bdf8">
             <div><span class="inline-block h-2 w-2 rounded-full bg-red-500 mr-1.5"></span>Conflict country</div>
-            <div><span class="inline-block h-2 w-2 rounded-full bg-orange-500 mr-1.5"></span>Third-party country</div>
+            <div><span class="inline-block h-2 w-2 rounded-full mr-1.5" style="background:var(--ally)"></span>Ally</div>
+            <div><span class="inline-block h-2 w-2 rounded-full mr-1.5" style="background:var(--partner)"></span>Partner</div>
             <div><span class="inline-block h-2 w-2 rounded-full bg-amber-400 mr-1.5"></span>Chokepoint</div>
             <div><span class="inline-block h-2 w-2 rounded-full bg-sky-400 mr-1.5"></span>Commodity</div>
             <div class="border-t border-slate-700 mt-1 pt-1">Edge label = shock magnitude (%)</div>
@@ -244,7 +260,20 @@
         const data = {{ graph_data|tojson }};
         const container = document.getElementById('contagion-network');
         const network = new vis.Network(container, data, {
-            layout: { improvedLayout: true },
+            layout: {
+                improvedLayout: true,
+                hierarchical: {
+                    enabled: true,
+                    direction: 'UD',
+                    sortMethod: 'directed',
+                    levelSeparation: 145,
+                    nodeSpacing: 185,
+                    treeSpacing: 220,
+                    blockShifting: true,
+                    edgeMinimization: true,
+                    parentCentralization: true
+                }
+            },
             nodes: {
                 shape: 'dot',
                 size: 19,
@@ -256,16 +285,13 @@
                 color: { color: '#64748b', highlight: '#38bdf8' },
                 arrows: { to: { enabled: true, scaleFactor: 0.55 } },
                 font: { size: 9, color: '#cbd5e1', align: 'middle', background: '#0f172a', strokeWidth: 0 },
-                smooth: { type: 'dynamic' }
+                smooth: { type: 'cubicBezier', forceDirection: 'vertical', roundness: 0.35 }
             },
             physics: {
-                solver: 'repulsion',
-                repulsion: { nodeDistance: 210, springLength: 230, springConstant: 0.04, damping: 0.09 },
-                stabilization: { iterations: 250 }
+                enabled: false
             },
             interaction: { hover: true, tooltipDelay: 150 }
         });
-        network.on('stabilizationIterationsDone', function() { network.setOptions({ physics: false }); });
     });
 </script>
 {% endif %}

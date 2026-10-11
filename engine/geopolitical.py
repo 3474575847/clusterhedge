@@ -69,6 +69,11 @@ class GeopoliticalEngine:
             a, b, severity, duration_days, self.knowledge_base
         )
         import_cost_exposures = self._get_import_cost_exposures([a, b])
+        uncovered_countries = [
+            self.knowledge_base["countries"].get(country_id, {}).get("name", input_name)
+            for country_id, input_name in zip((a, b), (country_a, country_b))
+            if country_id not in self.knowledge_base["countries"]
+        ]
         result = {
             "country_a": self.knowledge_base["countries"].get(a, {}).get("name", country_a.strip()),
             "country_b": self.knowledge_base["countries"].get(b, {}).get("name", country_b.strip()),
@@ -76,6 +81,14 @@ class GeopoliticalEngine:
             "severity": severity,
             "severity_multiplier": self.knowledge_base["severity_multipliers"][severity],
             "duration_days": duration_days,
+            "coverage_warnings": [
+                (
+                    f"{country} is not in the country knowledge base; "
+                    "its export shares, trade basins, and route profile are unavailable. "
+                    "Results include only the other country and shared supported data."
+                )
+                for country in uncovered_countries
+            ],
             "affected_routes": routes,
             "chokepoints": [route["chokepoint"] for route in routes],
             "escalation_chain": escalation_chain,
