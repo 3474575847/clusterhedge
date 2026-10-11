@@ -8,12 +8,12 @@ support commitment.
 ## Reporting a vulnerability
 
 Please do not publish suspected vulnerabilities, credentials, or personal
-data in a public issue. The maintainer has not supplied a private security
-contact yet.
+data in a public issue.
 
-**Private reporting contact: TODO.** Until a monitored contact is added, do not
-include secrets or sensitive details in a report. Public GitHub issues are not
-a private reporting channel.
+**Security contact:** [jindalaryan99@gmail.com](mailto:jindalaryan99@gmail.com).
+Email is not guaranteed to be encrypted; do not include credentials or
+unnecessary sensitive data. Public GitHub issues are not a private reporting
+channel.
 
 ## Deployment warning
 

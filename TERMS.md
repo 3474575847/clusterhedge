@@ -1,11 +1,10 @@
 # Terms of Use and Financial Disclaimer — unfinished draft
 
 **Status: incomplete. This is an informational draft, not a final legal
-agreement and not legal advice.** The operator's identity, contact details,
-service-specific terms, governing law, and dispute process have not been
-provided. Obtain legal review and complete this document before offering a
-public hosted service. The MIT License governs use of the source code; this
-draft does not replace it.
+agreement and not legal advice.** The operator's identity, service-specific
+terms, governing law, and dispute process have not been provided. Obtain legal
+review and complete this document before offering a public hosted service. The
+MIT License governs use of the source code; this draft does not replace it.
 
 **Last updated:** 2026-10-11
 
@@ -33,7 +32,8 @@ controls, storage, security, and privacy practices.
 
 ## Incomplete operator-specific terms
 
-- **Service operator and contact:** TODO — publish a monitored contact.
+- **Service operator:** TODO
+- **Public contact:** [jindalaryan99@gmail.com](mailto:jindalaryan99@gmail.com)
 - **Permitted use and acceptable-use rules:** TODO
 - **Service availability, account/data handling, and support terms:** TODO
 - **Governing law, consumer rights, and dispute terms:** TODO — obtain local

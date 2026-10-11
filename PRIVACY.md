@@ -1,10 +1,9 @@
 # Privacy Notice — unfinished draft
 
 **Status: incomplete. Do not treat this as a final or legally reviewed privacy
-policy.** The maintainer's public contact address, operator identity, retention
-period, and deployment-specific practices have not been supplied. Complete
-these items and obtain appropriate legal review before making a hosted service
-available to the public.
+policy.** The operator identity, retention period, and deployment-specific
+practices have not been supplied. Complete these items and obtain appropriate
+legal review before making a hosted service available to the public.
 
 **Last updated:** 2026-10-11
 
@@ -52,8 +51,7 @@ details here before launch.
 ## Contact and applicable requirements — incomplete
 
 - **Operator/data controller:** TODO
-- **Public privacy contact:** TODO — provide a monitored address that is safe
-  to publish.
+- **Public privacy contact:** [jindalaryan99@gmail.com](mailto:jindalaryan99@gmail.com)
 - **Retention and deletion periods:** TODO
 - **Applicable jurisdiction and privacy-rights process:** TODO — operator is
   based in India; obtain advice on applicable Indian and other laws before
